@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, RssNotifierActivity!</string>
+    <string name="app_name">RssNotifier</string>
+    <string name="txt_url_hint">Url</string>
+    <string name="btn_get_text">Get</string>
+    <string name="txt_empty_text">No data</string>
+    <string name="btn_more_text">More details</string>
+
+</resources>
