@@ -29,17 +29,23 @@ public class RssItemAdapter extends ArrayAdapter<RssItem> {
 		itemTitle.setText(mRssList.get(position).getTitle());
 		TextView itemDescription = (TextView) row.findViewById(R.id.item_description);
 		itemDescription.setText(mRssList.get(position).getDescription().replaceAll("\\<.*?>",""));
+		TextView itemPubDate = (TextView) row.findViewById(R.id.item_pubdate);
+		itemPubDate.setText(mRssList.get(position).getPubDate());
 		
 		if (position%2 == 0){
 			itemTitle.setTextColor(0xff000000);
 			itemTitle.setBackgroundColor(0xffffffff);
 			itemDescription.setTextColor(0xff000000);
 			itemDescription.setBackgroundColor(0xffffffff);
+			itemPubDate.setTextColor(0xff000000);
+			itemPubDate.setBackgroundColor(0xffffffff);
 		} else {
 			itemTitle.setTextColor(0xffffffff);
 			itemTitle.setBackgroundColor(0xff000000);
 			itemDescription.setTextColor(0xffffffff);
 			itemDescription.setBackgroundColor(0xff000000);
+			itemPubDate.setTextColor(0xffffffff);
+			itemPubDate.setBackgroundColor(0xff000000);
 		}
 		
 		return row;

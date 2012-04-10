@@ -29,7 +29,7 @@ public class RssDetailActivity extends Activity {
 			@Override
 			public void	onPageStarted(WebView view, String url, Bitmap favicon) {
 				progDialog = new ProgressDialog(RssDetailActivity.this);
-	    		progDialog.setCancelable(true);
+	    		progDialog.setCancelable(false);
 	    		progDialog.setMessage("Loading RSS content");
 	    		progDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
 					@Override

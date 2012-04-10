@@ -15,4 +15,11 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:text="Rss Description here" />
+	<TextView
+		android:id="@+id/item_pubdate"
+		android:textSize="12sp"
+		android:gravity="right"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="Rss PubDate here" />
 </LinearLayout>

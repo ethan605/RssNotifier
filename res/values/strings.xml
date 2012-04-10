@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="hello">Hello World, RssNotifierActivity!</string>
     <string name="app_name">RssNotifier</string>
-    <string name="txt_url_hint">Url</string>
-    <string name="btn_get_text">Get</string>
-    <string name="txt_empty_text">No data</string>
+    <string name="txt_filter_hint">Filter</string>
+    <string name="btn_add_text">Add new</string>
+    <string name="txt_item_empty_text">No RSS item fetched</string>
     <string name="btn_more_text">More details</string>
+    <string name="btn_browse_text">Browse</string>
+    <string name="btn_refresh_text">Refresh</string>
+    <string name="btn_filter_text">Filter</string>
+    <string name="txt_filter_empty_text">No RSS provider</string>
+    <string name="btn_confirm_text">Confirm</string>
+    <string name="btn_cancel_text">Cancel</string>
+    <string name="btn_clear_text">Clear all</string>
+    <string name="btn_ok_text">OK</string>
+    <string name="txt_provider_name_hint">Provider name</string>
+    <string name="txt_provider_link_hint">Provider link</string>
 
 </resources>

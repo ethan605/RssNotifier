@@ -3,8 +3,6 @@ package app.util.rssnotifier;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import android.util.Log;
-
 public class RssContentHandler extends DefaultHandler {
 	private static final int UNKNOWN_STATE = -1;
 	private static final int ELEMENT_START = 0;
@@ -30,6 +28,10 @@ public class RssContentHandler extends DefaultHandler {
 	public void startDocument() {
 		rssItem = new RssItem();
 		rssFeed = new RssFeed();
+	}
+	
+	@Override
+	public void endDocument() {
 	}
 	
 	@Override
