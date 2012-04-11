@@ -31,10 +31,10 @@ public class RssDetailActivity extends Activity {
 				progDialog = new ProgressDialog(RssDetailActivity.this);
 	    		progDialog.setCancelable(false);
 	    		progDialog.setMessage("Loading RSS content");
-	    		progDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+	    		progDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Hide", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
+						dialog.dismiss();
 					}
 				});
 	    		progDialog.show();

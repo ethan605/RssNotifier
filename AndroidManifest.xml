@@ -27,7 +27,7 @@
             android:name=".activity.RssDetailActivity" >
         </activity>
         <activity
-            android:name=".activity.RssFilterActivity" >
+            android:name=".base.activity.RssFilterActivity" >
         </activity>
     </application>
 

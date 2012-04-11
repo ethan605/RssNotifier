@@ -1,21 +1,15 @@
 package app.util.rssnotifier.activity;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.net.URL;
 
-import javax.xml.parsers.*;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.xml.sax.*;
 import android.app.*;
 import android.content.*;
 import android.os.*;
 import android.view.*;
 import android.widget.*;
-import app.util.rssnotifier.*;
+import app.util.rssnotifier.R;
+import app.util.rssnotifier.base.*;
 import app.util.rssnotifier.database.DatabaseQuery;
 
 public class RssReaderActivity extends ListActivity implements View.OnClickListener {
@@ -72,33 +66,14 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 		setListAdapter(new RssItemAdapter(this, R.layout.rss_item_list, rssFeed.getList()));
     }
     
-    private void getXML(String _strProvider, String _strUrl) throws ParserConfigurationException, SAXException, IOException {
-    	HttpClient client = new DefaultHttpClient();
-    	HttpGet request = new HttpGet();
-    	try {
-			request.setURI(new URI(_strUrl));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-    	HttpResponse response = client.execute(request);
-    	Reader inputStream = new InputStreamReader(response.getEntity().getContent());
-    	RssContentHandler rssContentHandler = new RssContentHandler();
-    	InputSource inputSource = new InputSource();
-    	inputSource.setCharacterStream(inputStream);
-    	
-    	SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-    	SAXParser saxParser = saxParserFactory.newSAXParser();
-    	saxParser.parse(inputSource, rssContentHandler);
-//    	XMLReader xmlReader = saxParser.getXMLReader();
-//    	xmlReader.setContentHandler(rssContentHandler);
-//    	xmlReader.parse(inputSource);
-    	
-    	RssFeed _feed = rssContentHandler.getFeed();
-    	for (int i = 0; i < _feed.getList().size(); i++)
-    		dbQuery.insertRssItem(_strProvider, _feed.getList().get(i));
+    private void fetchRss(String _provider, String _url) {
+    	RssFeed _feed = new XmlPullHandler(_provider, _url).getFeed();
+		if (_feed != null)
+	    	for (int i = 0; i < _feed.getList().size(); i++)
+	    		dbQuery.insertRssItem(_feed.getList().get(i));
     }
     
-    private class RssDownloadTask extends AsyncTask<String, Integer, Long> {
+    private class RssDownloadTask extends AsyncTask<String, Void, Void> {
     	private ProgressDialog progDialog;
     	private boolean dialogShow;
     	
@@ -112,11 +87,12 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
     			progDialog = new ProgressDialog(RssReaderActivity.this);
     			progDialog.setCancelable(false);
     			progDialog.setMessage("Fetching RSS");
-    			progDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+    			progDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Hide", new DialogInterface.OnClickListener() {
     				@Override
     				public void onClick(DialogInterface dialog, int which) {
-    					dialog.cancel();
-    					RssDownloadTask.this.cancel(true);
+    					dialog.dismiss();
+    					Toast.makeText(getApplicationContext(), "Keep updating RSS items", Toast.LENGTH_SHORT).show();
+//    					RssDownloadTask.this.cancel(true);
     				}
     			});
     			progDialog.show();    			
@@ -124,23 +100,16 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
     	}
     	
 		@Override
-		protected Long doInBackground(String... urls) {
-			try {
-				getXML(urls[0], urls[1]);
-			} catch (ParserConfigurationException e) {
-				e.printStackTrace();
-			} catch (SAXException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return (long) 0;
+		protected Void doInBackground(String... urls) {
+			fetchRss(urls[0], urls[1]);
+			return null;
 		}
 		
     	@Override
-    	protected void onPostExecute(Long result) {
+    	protected void onPostExecute(Void result) {
     		if (dialogShow)
     			progDialog.cancel();
+    		Toast.makeText(getApplicationContext(), "RSS items updating done", Toast.LENGTH_SHORT).show();
     		rssFeed = dbQuery.getRssFeed(new String[] {rssProvider.getProviderNames()[curProvider]});
     		if (rssFeed != null)
     			setListAdapter(new RssItemAdapter(RssReaderActivity.this, R.layout.rss_item_list, rssFeed.getList()));
@@ -171,28 +140,39 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 			case R.id.btn_ok:
 				String name = txtProviderName.getText().toString(),
 						link = txtProviderLink.getText().toString();
+				boolean validated = true;
 				
 				if (!name.equals("") && !link.equals("")) {
-					if (name.equals("vne"))
-						link = "http://vnexpress.net/rss/gl/trang-chu.rss";
-					else if (name.equals("fsl"))
-						link = "http://fslink.us/?feed=rss2";
-					else if (name.equals("cnn"))
-						link = "http://rss.cnn.com/rss/edition.rss";
-					else if (name.equals("genk"))
-						link = "http://genk.vn/trang-chu.rss";
-					curProvider = rssProvider.getProviderNames().length;
-					rssProvider.addProvider(name, link);
-					new RssDownloadTask(true).execute(name, link);
-					dbQuery.insertRssProvider(name, link);
-					dismiss();
+					try {
+						new URL(link).openConnection().connect();
+					} catch (IOException e) {
+						Toast.makeText(getApplicationContext(), "RSS source is invalid, please try again", Toast.LENGTH_SHORT).show();
+						validated = false;
+					}
+					if (validated) {
+						if (name.equals("vnExpress"))
+							link = "http://vnexpress.net/rss/gl/trang-chu.rss";
+						else if (name.equals("fsLink"))
+							link = "http://fslink.us/?feed=rss2";
+						else if (name.equals("CNN"))
+							link = "http://rss.cnn.com/rss/edition.rss";
+						else if (name.equals("Genk"))
+							link = "http://genk.vn/trang-chu.rss";
+						else if (name.equals("HdVnBits"))
+							link = "http://hdvnbits.org/torrentrss.php?rows=10&cat=23,24,124,128";
+						curProvider = rssProvider.getProviderNames().length;
+						rssProvider.addProvider(name, link);
+						new RssDownloadTask(true).execute(name, link);
+						dbQuery.insertRssProvider(name, link);
+						dismiss();
+					}
 				}
 				else
 					Toast.makeText(getApplicationContext(), "Please provide valid name and link", Toast.LENGTH_SHORT).show();
 				break;
 			case R.id.btn_clear:
 				txtProviderName.setText("");
-				txtProviderLink.setText("");
+				txtProviderLink.setText("http://");
 				break;
 			default:
 				break;

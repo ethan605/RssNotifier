@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import app.util.rssnotifier.R;
-import app.util.rssnotifier.RssProviderList;
+import app.util.rssnotifier.base.RssProviderList;
 import app.util.rssnotifier.database.DatabaseQuery;
 
 public class RssFilterActivity extends Activity implements View.OnClickListener {
