@@ -14,20 +14,24 @@
         android:label="@string/app_name" >
         <activity
             android:name=".activity.RssNotifierActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.RssReaderActivity" >
+            android:name=".activity.RssReaderActivity"
+            android:configChanges="orientation" >
         </activity>
         <activity
-            android:name=".activity.RssDetailActivity" >
+            android:name=".activity.RssDetailActivity"
+            android:configChanges="orientation" >
         </activity>
         <activity
-            android:name=".base.activity.RssFilterActivity" >
+            android:name=".activity.RssManageActivity"
+            android:configChanges="orientation" >
         </activity>
     </application>
 

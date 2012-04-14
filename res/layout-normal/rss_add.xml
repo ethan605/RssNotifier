@@ -8,8 +8,8 @@
         android:id="@+id/txt_provider_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:hint="@string/txt_provider_name_hint"
         android:ems="10" />
 
@@ -17,8 +17,8 @@
         android:id="@+id/txt_provider_link"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:hint="@string/txt_provider_link_hint"
         android:text="http://"
@@ -31,20 +31,20 @@
 
         <Button
             android:id="@+id/btn_ok"
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="20dp"
             android:text="@string/btn_ok_text" />
 
         <Button
             android:id="@+id/btn_clear"
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="50dp"
+            android:layout_marginRight="20dp"
             android:text="@string/btn_clear_text" />
 
     </RelativeLayout>

@@ -14,14 +14,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		DatabaseQuery.TABLE_ID + " integer primary key autoincrement, " +
 		DatabaseQuery.RSS_ITEM_PROVIDER + " text not null, " +
 		DatabaseQuery.RSS_ITEM_TITLE + " text unique not null, " +
+		DatabaseQuery.RSS_ITEM_TITLE_CLEAN + " text not null, " +
 		DatabaseQuery.RSS_ITEM_DESCRIPTION + " text, " +
+		DatabaseQuery.RSS_ITEM_DESCRIPTION_CLEAN + " text, " +
 		DatabaseQuery.RSS_ITEM_LINK + " text, " +
 		DatabaseQuery.RSS_ITEM_PUBDATE + " text not null);";
 	
 	public static final String TABLE_RSS_PROVIDER_CREATE = 
 		"create table " + DatabaseQuery.TABLE_RSS_PROVIDER + " (" +
 		DatabaseQuery.TABLE_ID + " integer primary key autoincrement, " +
-		DatabaseQuery.RSS_PROVIDER_NAME + " text unique not null, " + 
+		DatabaseQuery.RSS_PROVIDER_NAME + " text not null, " + 
 		DatabaseQuery.RSS_PROVIDER_LINK + " text unique not null);";
 	
 	public DatabaseHelper(Context context) {

@@ -4,23 +4,32 @@ import java.util.ArrayList;
 
 public class RssProviderList {
 	private ArrayList<String> nameList;
-	private ArrayList<String> linkList;
+	private ArrayList<RssProvider> providerList;
 	
 	public RssProviderList() {
-		this.nameList = new ArrayList<String>();
-		this.linkList = new ArrayList<String>();
+		nameList = new ArrayList<String>();
+		providerList = new ArrayList<RssProvider>();
 	}
 	
 	public void addProvider(String name, String link) {
-		this.nameList.add(name);
-		this.linkList.add(link);
+		int nameIndex = nameList.indexOf(name);
+		if (nameIndex != -1)
+			providerList.get(nameIndex).addLink(link);
+		else {
+			nameList.add(name);
+			providerList.add(new RssProvider(name, link));
+		}
 	}
 	
 	public String[] getProviderNames() {
 		return nameList.toArray(new String[nameList.size()]);
 	}
 	
-	public String[] getProviderLinks() {
-		return linkList.toArray(new String[linkList.size()]);
+	public String[] getProviderLinks(String name) {
+		return providerList.get(nameList.indexOf(name)).getLink();
+	}
+	
+	public int length() {
+		return nameList.size();
 	}
 }

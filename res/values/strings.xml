@@ -1,19 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">RssNotifier</string>
-    <string name="txt_filter_hint">Filter</string>
     <string name="btn_add_text">Add new</string>
     <string name="txt_item_empty_text">No RSS item fetched</string>
     <string name="btn_more_text">More details</string>
     <string name="btn_browse_text">Browse</string>
     <string name="btn_refresh_text">Refresh</string>
     <string name="btn_filter_text">Filter</string>
-    <string name="txt_filter_empty_text">No RSS provider</string>
     <string name="btn_confirm_text">Confirm</string>
     <string name="btn_cancel_text">Cancel</string>
     <string name="btn_clear_text">Clear all</string>
     <string name="btn_ok_text">OK</string>
     <string name="txt_provider_name_hint">Provider name</string>
     <string name="txt_provider_link_hint">Provider link</string>
+    <string name="rss_content_loading">Loading RSS detail, please wait</string>
+    <string name="rss_add_blank_error">Please provide valid name and link</string>
+    <string name="rss_source_invalid">RSS source is invalid, please try again</string>
+    <string name="rss_choose_provider">Choose an RSS provider</string>
+    <string name="rss_add_provider">Add new RSS Provider</string>
+    <string name="rss_items_update_done">RSS items updating done</string>
+    <string name="rss_fetching">Fetching RSS</string>
+    <string name="btn_hide_text">Hide</string>
+    <string name="rss_source_validate">Validating RSS source</string>
+    <string name="btn_manage_text">Manage</string>
+    <string name="btn_select_mode_text">Select mode</string>
+    <string name="btn_search_text">Search</string>
+    <string name="btn_delete_text">Delete</string>
+    <string name="btn_select_all_text">Select all</string>
+    <string name="btn_select_none_text">Select none</string>
+    <string name="btn_browse_mode_text">Browse mode</string>
+    <string name="rss_keep_updating">RSS update still running</string>
+    <string name="rss_item_not_update">No RSS updated</string>
+    <string name="txt_search_hint">Type to search news</string>
+    <string name="btn_done_text">Done</string>
 
 </resources>

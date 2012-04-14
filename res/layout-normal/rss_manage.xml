@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/btn_add_text" />
+
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/btn_add"
+            android:visibility="gone"
+            android:text="@string/btn_delete_text" />
+
+        <Button
+            android:id="@+id/btn_select"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:text="@string/btn_select_mode_text" />
+
+    </RelativeLayout>
+
+    <ListView
+		android:id="@+id/lst_rss_provider"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
+
+</LinearLayout>

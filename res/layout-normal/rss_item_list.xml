@@ -2,20 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/item_list">
+    android:orientation="vertical" >
 
 	<TextView
 		android:id="@+id/item_title"
-		android:textSize="22sp"
+		android:textSize="25sp"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:layout_marginBottom="10dp"
 		android:text="Rss Title here" />
 	<TextView
 		android:id="@+id/item_description"
-		android:textSize="12sp"
+		android:textSize="13sp"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:layout_marginBottom="5dp"
 		android:text="Rss Description here" />
 
 	<RelativeLayout
@@ -26,14 +28,16 @@
 		    android:id="@+id/item_provider"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:textSize="12sp"
+		    android:textSize="11sp"
+		    android:textColor="#d0d000"
 		    android:text="Rss Provider here" />
 		<TextView
 		    android:id="@+id/item_pubdate"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_alignParentRight="true"
-		    android:text="Rss PubDate here"
-		    android:textSize="12sp" />
+		    android:textSize="11sp"
+		    android:textColor="#d0d000"
+		    android:text="Rss PubDate here" />
 	</RelativeLayout>
 </LinearLayout>

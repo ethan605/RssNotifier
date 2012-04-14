@@ -1,9 +1,9 @@
 package app.util.rssnotifier.activity;
 
 import android.app.*;
-import android.content.DialogInterface;
 import android.os.*;
 import android.graphics.Bitmap;
+import android.view.Window;
 import android.webkit.*;
 import android.widget.*;
 import app.util.rssnotifier.R;
@@ -15,6 +15,7 @@ public class RssDetailActivity extends Activity {
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.rss_item_detail);
 		
 		intentBundle = getIntent().getExtras();
@@ -25,23 +26,14 @@ public class RssDetailActivity extends Activity {
 		webContent = (WebView) findViewById(R.id.rss_item_content);
 		webContent.getSettings().setJavaScriptEnabled(true);
 		webContent.setWebViewClient(new WebViewClient() {
-			private ProgressDialog progDialog;
 			@Override
 			public void	onPageStarted(WebView view, String url, Bitmap favicon) {
-				progDialog = new ProgressDialog(RssDetailActivity.this);
-	    		progDialog.setCancelable(false);
-	    		progDialog.setMessage("Loading RSS content");
-	    		progDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Hide", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-	    		progDialog.show();
+				Toast.makeText(RssDetailActivity.this, R.string.rss_content_loading, Toast.LENGTH_SHORT).show();
+				setProgressBarIndeterminateVisibility(true);
 			}
 			@Override
 			public void	onPageFinished(WebView view, String url) {
-				progDialog.cancel();
+				setProgressBarIndeterminateVisibility(false);
 			}
 		});
 		webContent.loadUrl(intentBundle.getString("rss_link"));

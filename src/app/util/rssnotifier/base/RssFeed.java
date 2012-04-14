@@ -11,16 +11,21 @@ public class RssFeed extends RssItem {
 	}
 	
 	public ArrayList<RssItem> getList() {
-		return this.rssList;
+		return rssList;
 	}
 	
 	public int addItem(RssItem rssItem) {
-		this.rssList.add(rssItem);
-		return this.rssList.size();
+		rssList.add(rssItem);
+		return rssList.size();
 	}
 	
 	public void addList(RssFeed _rssFeed) {
-		this.rssList.addAll(_rssFeed.getList());
+		if (_rssFeed != null)
+			rssList.addAll(_rssFeed.getList());
+	}
+	
+	public int size() {
+		return rssList.size();
 	}
 	
 	@Override
