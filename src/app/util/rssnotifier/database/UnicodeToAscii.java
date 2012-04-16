@@ -1,15 +1,13 @@
 package app.util.rssnotifier.database;
 
 public class UnicodeToAscii {
-	public static final String UNICODE_STRING
-		= "àÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬđĐèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆìÌỉỈĩĨíÍịỊòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰýÝ :+\\<>\"*,!?%$=@#~[]`|^";
-	public static final String ASCII_STRING
-		= "aAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAdDeEeEeEeEeEeEeEeEeEeEeEiIiIiIiIiIoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOuUuUuUuUuUuUuUuUuUuUuUyY____\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+	public static final String UNICODE_STRING	= "àÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬđĐèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆìÌỉỈĩĨíÍịỊòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰýÝ:+*,!?%$=@#~[]`|^\"";
+	public static final String ASCII_STRING		= "aAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAaAdDeEeEeEeEeEeEeEeEeEeEeEiIiIiIiIiIoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOoOuUuUuUuUuUuUuUuUuUuUuUyY__________________";
 	
 	public static final char[] UNICODE_CHARS = UNICODE_STRING.toCharArray();
 	public static final char[] ASCII_CHARS = ASCII_STRING.toCharArray();
 	
-	public static String convertToLatin(String unicodeString) {
+	public static String convert(String unicodeString) {
 		char [] unicodeChars = unicodeString.toCharArray();
 		char [] asciiChars = new char[unicodeChars.length];
 		boolean check;

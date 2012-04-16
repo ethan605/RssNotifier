@@ -1,5 +1,7 @@
 package app.util.rssnotifier.base;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import android.app.ListActivity;
 import android.content.Context;
@@ -9,13 +11,13 @@ import app.util.rssnotifier.R;
 
 public class RssItemAdapter extends ArrayAdapter<RssItem> {
 	public static int MAX_DESCRIPTION_LENGTH = 500;
-	private Context mContext;
-	private List<RssItem> mRssList;
+	private Context context;
+	private List<RssItem> rssList;
 	
-	public RssItemAdapter(Context context, int textViewResourceId, List<RssItem> objects) {
-		super(context, textViewResourceId, objects);
-		mContext = context;
-		mRssList = objects;
+	public RssItemAdapter(Context _context, int textViewResourceId, ArrayList<RssItem> objects) {
+		super(_context, textViewResourceId, objects);
+		context = _context;
+		rssList = objects;
 	}
 	
 	@Override
@@ -23,24 +25,26 @@ public class RssItemAdapter extends ArrayAdapter<RssItem> {
 		View row = convertView;
 		
 		if (row == null) {
-			LayoutInflater layoutInflater = ((ListActivity) mContext).getLayoutInflater();
+			LayoutInflater layoutInflater = ((ListActivity) context).getLayoutInflater();
 			row = layoutInflater.inflate(R.layout.rss_item_list, parent, false);
 		}
 		
-		TextView itemTitle = (TextView) row.findViewById(R.id.item_title);
-		TextView itemDescription = (TextView) row.findViewById(R.id.item_description);
-		TextView itemProvider = (TextView) row.findViewById(R.id.item_provider);
-		TextView itemPubDate = (TextView) row.findViewById(R.id.item_pubdate);
+		TextView title = (TextView) row.findViewById(R.id.item_title);
+		TextView description = (TextView) row.findViewById(R.id.item_description);
+		TextView provider = (TextView) row.findViewById(R.id.item_provider);
+		TextView pubDate = (TextView) row.findViewById(R.id.item_pubdate);
 		
-		itemTitle.setText(mRssList.get(position).getTitle());
-		String description = mRssList.get(position).getDescription();
-		if (description.length() > MAX_DESCRIPTION_LENGTH) {
-			description = description.substring(0, MAX_DESCRIPTION_LENGTH+1);
-			description += "...";
+		RssItem item = rssList.get(position);
+		title.setText(item.getTitle());
+		String desc = item.getDescription();
+		if (desc.length() > MAX_DESCRIPTION_LENGTH) {
+			desc = desc.substring(0, MAX_DESCRIPTION_LENGTH+1);
+			desc += "...";
 		}
-		itemDescription.setText(description);
-		itemProvider.setText(mRssList.get(position).getProvider());
-		itemPubDate.setText(mRssList.get(position).getPubDate());
+		description.setText(desc);
+		provider.setText(item.getProvider());
+		Date date = new Date(Long.parseLong(item.getPubDate()));
+		pubDate.setText(date.toLocaleString());
 		
 		return row;
 	}

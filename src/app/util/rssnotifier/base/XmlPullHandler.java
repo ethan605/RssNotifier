@@ -21,10 +21,10 @@ import android.text.Html;
 import android.util.Log;
 
 public class XmlPullHandler {
+	final String TAG = "XmlPullHandler";
 	public static final String[] DATE_FORMATS = {"EEE, dd MMM yyyy k:mm:ss ZZZ",
 												 "M/d/y K:m:s a"};
 	
-	private static final String TAG = "XmlPullHandler";
 	private RssFeed rssFeed = null;
 	private RssItem rssItem = null;
     private XmlPullParser parser;
@@ -88,10 +88,9 @@ public class XmlPullHandler {
         			rssItem.setLink(tagContent);
         		else if (parser.getName().equalsIgnoreCase("pubdate")) {
         			for (String format : DATE_FORMATS) {
-        				Date pubDate;
-						pubDate = XmlPullHandler.parsePubDate(format, tagContent);
+        				Date pubDate = XmlPullHandler.parsePubDate(format, tagContent);
 						if (pubDate != null) {
-							rssItem.setPubDate(pubDate.toLocaleString());        				
+							rssItem.setPubDate(String.valueOf(pubDate.getTime()));
 							break;
 						}
         			}

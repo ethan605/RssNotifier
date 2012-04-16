@@ -47,7 +47,7 @@ public class RssManageActivity extends Activity implements OnClickListener {
 		
 		dbQuery = new DatabaseQuery(this);
 		dbQuery.openDB();
-		rssProviders = dbQuery.getRssProviderList();
+		rssProviders = dbQuery.getRssProviderList(null);
         
 		providerList = new ArrayList<String>();
 		if (rssProviders != null)
