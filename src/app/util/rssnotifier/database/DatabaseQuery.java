@@ -26,12 +26,13 @@ public class DatabaseQuery {
 	public static final String RSS_ITEM_DESCRIPTION_CLEAN = "description_clean";
 	public static final String RSS_ITEM_LINK = "link";
 	public static final String RSS_ITEM_PUBDATE = "pubdate";
+	public static final String RSS_ITEM_UPDATED = "updated";
 	
 	public static final String TABLE_RSS_PROVIDER = "RssProvider";
 	public static final String RSS_PROVIDER_NAME = "name";
 	public static final String RSS_PROVIDER_LINK = "link";
 	
-	private static final String[] RSS_ITEM_KEYS = {TABLE_ID, RSS_ITEM_PROVIDER, RSS_ITEM_TITLE, RSS_ITEM_DESCRIPTION, RSS_ITEM_LINK, RSS_ITEM_PUBDATE};	
+	private static final String[] RSS_ITEM_KEYS = {TABLE_ID, RSS_ITEM_PROVIDER, RSS_ITEM_TITLE, RSS_ITEM_DESCRIPTION, RSS_ITEM_LINK, RSS_ITEM_PUBDATE, RSS_ITEM_UPDATED};	
 	private static final String[] RSS_PROVIDER_KEYS = {TABLE_ID, RSS_PROVIDER_NAME, RSS_PROVIDER_LINK};
 	
 	private DatabaseHelper dbHelper;
@@ -78,6 +79,7 @@ public class DatabaseQuery {
 		value.put(RSS_ITEM_DESCRIPTION_CLEAN, UnicodeToAscii.convert(item.getDescription()).toLowerCase());
 		value.put(RSS_ITEM_LINK, item.getLink());
 		value.put(RSS_ITEM_PUBDATE, item.getPubDate());
+		value.put(RSS_ITEM_UPDATED, item.getUpdated());
 		return db.insert(TABLE_RSS_ITEM, null, value);
 	}
 	
@@ -90,6 +92,10 @@ public class DatabaseQuery {
 		if (limit > 0)
 			strLimit = "0," + String.valueOf(limit);
 		return db.query(TABLE_RSS_ITEM, RSS_ITEM_KEYS, criteria, null, null, null, RSS_ITEM_PUBDATE + " DESC", strLimit);
+	}
+	
+	private Cursor getUpdatedRssItems() {
+		return db.query(TABLE_RSS_ITEM, RSS_ITEM_KEYS, RSS_ITEM_UPDATED + "=" + textWrap("1"), null, null, null, RSS_ITEM_PUBDATE + " DESC");
 	}
 	
 	private Cursor getRssProviders(String name) {
@@ -111,7 +117,8 @@ public class DatabaseQuery {
 			ret = new ArrayList<RssItem>();
 			cursor.moveToFirst();
 			while (!cursor.isAfterLast()) {
-				ret.add(new RssItem(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5)));
+				ret.add(new RssItem(cursor.getString(1), cursor.getString(2), cursor.getString(3),
+									cursor.getString(4), cursor.getString(5), cursor.getInt(6)));
 				cursor.moveToNext();
 			}
 		}
@@ -119,15 +126,13 @@ public class DatabaseQuery {
 		return ret;
 	}
 	
-	public ArrayList<Integer> insertRssFeed(RssFeed feed) {
-		ArrayList<Integer> addList = new ArrayList<Integer>();
+	public boolean insertRssFeed(RssFeed feed) {
+		boolean hasNewItem = false;
 		for (int i = 0; i < feed.getList().size(); i++)
 			if (insertRssItem(feed.getList().get(i)) != -1)
-				addList.add(i);
+				hasNewItem = true;
 		
-		if (addList.size() > 0)
-			return addList;
-		return null;
+		return hasNewItem;
 	}
 	
 	public long insertRssProvider(String provider, String link) {
@@ -158,18 +163,35 @@ public class DatabaseQuery {
 	}
 	
 	public RssFeed getRssFeed(String provider, int limit) {
-		RssFeed feed = null;
 		Cursor cursor = getRssItems(provider, limit);
-		if (cursor != null) {
-			feed = new RssFeed();
-			cursor.moveToFirst();
-			while (!cursor.isAfterLast()) {
-				feed.addItem(new RssItem(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5)));
-				cursor.moveToNext();
-			}
+		RssFeed feed = new RssFeed();
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			feed.addItem(new RssItem(cursor.getString(1), cursor.getString(2), cursor.getString(3),
+					cursor.getString(4), cursor.getString(5), cursor.getInt(6)));
+			cursor.moveToNext();
 		}
-        
+		
 		return feed;
+	}
+	
+	public RssFeed getUpdatedRssFeed() {
+		Cursor cursor = getUpdatedRssItems();
+		RssFeed feed = new RssFeed();
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			feed.addItem(new RssItem(cursor.getString(1), cursor.getString(2), cursor.getString(3),
+						cursor.getString(4), cursor.getString(5), cursor.getInt(6)));
+			cursor.moveToNext();
+		}
+		
+		return feed;
+	}
+	
+	public void updateRssItems() {
+		ContentValues value = new ContentValues();
+		value.put(RSS_ITEM_UPDATED, "0");
+		db.update(TABLE_RSS_ITEM, value, RSS_ITEM_UPDATED + "=" + textWrap("1"), null);
 	}
 	
 	public RssProviderList getRssProviderList(String name) {

@@ -18,7 +18,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		DatabaseQuery.RSS_ITEM_DESCRIPTION + " text, " +
 		DatabaseQuery.RSS_ITEM_DESCRIPTION_CLEAN + " text, " +
 		DatabaseQuery.RSS_ITEM_LINK + " text, " +
-		DatabaseQuery.RSS_ITEM_PUBDATE + " text not null);";
+		DatabaseQuery.RSS_ITEM_PUBDATE + " text not null, " +
+		DatabaseQuery.RSS_ITEM_UPDATED + " integer not null);";
 	
 	public static final String TABLE_RSS_PROVIDER_CREATE = 
 		"create table " + DatabaseQuery.TABLE_RSS_PROVIDER + " (" +

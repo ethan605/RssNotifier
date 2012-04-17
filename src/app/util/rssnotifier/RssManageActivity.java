@@ -1,8 +1,9 @@
-package app.util.rssnotifier.activity;
+package app.util.rssnotifier;
 
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -39,10 +40,10 @@ public class RssManageActivity extends Activity implements OnClickListener {
         lstProviderList = (ListView) findViewById(R.id.lst_rss_provider);
         lstProviderList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		Button btnAdd = (Button) findViewById(R.id.btn_add),
-				btnDelete = (Button) findViewById(R.id.btn_delete),
+				btnSetting = (Button) findViewById(R.id.btn_setting),
 				btnSelect = (Button) findViewById(R.id.btn_select);
 		btnAdd.setOnClickListener(this);
-		btnDelete.setOnClickListener(this);
+		btnSetting.setOnClickListener(this);
 		btnSelect.setOnClickListener(this);
 		
 		dbQuery = new DatabaseQuery(this);
@@ -68,42 +69,64 @@ public class RssManageActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		Button btnAdd = (Button) findViewById(R.id.btn_add);
-		Button btnDelete = (Button) findViewById(R.id.btn_delete);
+		Button btnSetting = (Button) findViewById(R.id.btn_setting);
 		Button btnSelect = (Button) findViewById(R.id.btn_select);
 		switch (v.getId()) {
 		case R.id.btn_add:
 			if (btnAdd.getText().toString().equals(getString(R.string.btn_add_text)))
 				new RssAddDialog(this).show();
 			else if (btnAdd.getText().toString().equals(getString(R.string.btn_select_all_text))) {
+				for (int i = 0; i < lstProviderList.getCount(); i++)
+					lstProviderList.setItemChecked(i, true);
 				btnAdd.setText(R.string.btn_select_none_text);
 			} else if (btnAdd.getText().toString().equals(getString(R.string.btn_select_none_text))) {
+				for (int i = 0; i < lstProviderList.getCount(); i++)
+					lstProviderList.setItemChecked(i, false);
 				btnAdd.setText(R.string.btn_select_all_text);
 			}
 			break;
-		case R.id.btn_delete:
-			long[] checkedItems = lstProviderList.getCheckItemIds();
-			if (checkedItems.length == 0)
+		case R.id.btn_setting:
+			if (btnSetting.getText().toString().equals("Setting")) {
 				break;
-			for (int i = checkedItems.length-1; i >= 0; i--) {
-				dbQuery.deleteRssProvider(providerList.get((int) checkedItems[i]));
-				providerList.remove((int) checkedItems[i]);
 			}
-			providerAdapter.notifyDataSetChanged();
-			lstProviderList.clearChoices();
-			setResult(RssReaderActivity.RES_RSS_DELETE, new Intent().putExtra("delete-provider", checkedItems));
+			
+			if (lstProviderList.getCheckItemIds().length == 0)
+				break;
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.rss_delete_provider)
+					.setCancelable(false)
+					.setPositiveButton(R.string.btn_ok_text, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							long[] checkedItems = lstProviderList.getCheckItemIds();
+							for (int i = checkedItems.length-1; i >= 0; i--) {
+								dbQuery.deleteRssProvider(providerList.get((int) checkedItems[i]));
+								providerList.remove((int) checkedItems[i]);
+							}
+							providerAdapter.notifyDataSetChanged();
+							lstProviderList.clearChoices();
+							setResult(RssReaderActivity.RES_RSS_DELETE, new Intent().putExtra("delete-provider", checkedItems));
+						}
+					})
+					.setNegativeButton(R.string.btn_cancel_text, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {	
+						}
+					}).show();
 			break;
 		case R.id.btn_select:
 			if (btnSelect.getText().toString().equals(getString(R.string.btn_select_mode_text))) {
 				providerAdapter = new ArrayAdapter<String>(this,
 					android.R.layout.simple_list_item_multiple_choice, providerList);
 				btnAdd.setText(R.string.btn_select_all_text);
-				btnDelete.setVisibility(View.VISIBLE);
+				btnSetting.setText(R.string.btn_delete_text);
 				btnSelect.setText(R.string.btn_browse_mode_text);
 			} else {
 				providerAdapter = new ArrayAdapter<String>(this,
 					android.R.layout.simple_list_item_1, providerList);
 				btnAdd.setText(R.string.btn_add_text);
-				btnDelete.setVisibility(View.GONE);
+				btnSetting.setText(R.string.btn_setting_text);
 				btnSelect.setText(R.string.btn_select_mode_text);
 			}
 			lstProviderList.setAdapter(providerAdapter);
@@ -111,6 +134,12 @@ public class RssManageActivity extends Activity implements OnClickListener {
 		default:
 			break;
 		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		dbQuery.closeDB();
+		finish();
 	}
 	
 	private class RssAddDialog extends Dialog implements View.OnClickListener {
@@ -151,6 +180,8 @@ public class RssManageActivity extends Activity implements OnClickListener {
     			progDialog.cancel();
     			if (!validate)
     				Toast.makeText(RssManageActivity.this, R.string.rss_source_invalid, Toast.LENGTH_SHORT).show();
+    			else if (dbQuery.insertRssProvider(name, link) == -1)
+    				Toast.makeText(RssManageActivity.this, R.string.rss_provider_link_exists, Toast.LENGTH_SHORT).show();
     			else
     				process(name, link);
     		}
@@ -207,12 +238,6 @@ public class RssManageActivity extends Activity implements OnClickListener {
 			default:
 				break;
 			}
-		}
-		
-		@Override
-		public void onBackPressed() {
-			dbQuery.closeDB();
-			finish();
 		}
 		
 		private void process(String name, String link) {

@@ -2,11 +2,10 @@ package app.util.rssnotifier.base;
 
 import java.util.ArrayList;
 
-public class RssFeed extends RssItem {
+public class RssFeed {
 	private ArrayList<RssItem> rssList;
 	
 	public RssFeed() {
-		super();
 		rssList = new ArrayList<RssItem>();
 	}
 	
@@ -26,10 +25,5 @@ public class RssFeed extends RssItem {
 	
 	public int size() {
 		return rssList.size();
-	}
-	
-	@Override
-	public String toString() {
-		return getTitle();
 	}
 }

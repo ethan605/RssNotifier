@@ -61,7 +61,6 @@ public class XmlPullHandler {
         switch (event) {
         case XmlPullParser.START_DOCUMENT:
         	rssFeed = new RssFeed();
-        	rssFeed.setTitle(provider);
         	tagHeader = true;
             break;
         case XmlPullParser.START_TAG:
@@ -78,8 +77,10 @@ public class XmlPullHandler {
         	tagStart = false;
         	if (!tagHeader) {
         		tagContent = Html.fromHtml(tagContent).toString().replaceAll("\"", "\'");
-        		if (parser.getName().equalsIgnoreCase("item"))
+        		if (parser.getName().equalsIgnoreCase("item")) {
+        			rssItem.setUpdated(1);
         			rssFeed.addItem(rssItem);
+        		}
         		else if (parser.getName().equalsIgnoreCase("title"))
         			rssItem.setTitle(tagContent);
         		else if (parser.getName().equalsIgnoreCase("description"))
@@ -118,7 +119,7 @@ public class XmlPullHandler {
     	return date;
     }
     
-    private static String getXmlFromUrl(String url) throws IllegalArgumentException, IOException {
+    public static String getXmlFromUrl(String url) throws IllegalArgumentException, IOException {
     	HttpGet getRequest = new HttpGet(url);
     	DefaultHttpClient client = new DefaultHttpClient();
     	HttpResponse getResponse = client.execute(getRequest);

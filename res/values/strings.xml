@@ -33,5 +33,9 @@
     <string name="rss_item_not_update">No RSS updated</string>
     <string name="txt_search_hint">Type to search news</string>
     <string name="btn_done_text">Done</string>
+    <string name="rss_delete_provider">Are you sure?</string>
+    <string name="rss_provider_link_exists">The input provider link existed</string>
+    <string name="btn_setting_text">Seting</string>
+    <string name="rss_update_notification">New RSS updated</string>
 
 </resources>

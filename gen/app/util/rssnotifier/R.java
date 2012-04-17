@@ -11,29 +11,31 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int border=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
+        public static final int ic_launcher=0x7f020000;
+        public static final int new_item=0x7f020001;
     }
     public static final class id {
-        public static final int btn_add=0x7f05000a;
-        public static final int btn_browse=0x7f05000f;
+        public static final int btn_add=0x7f05000c;
+        public static final int btn_browse=0x7f050011;
         public static final int btn_clear=0x7f050003;
-        public static final int btn_delete=0x7f05000b;
-        public static final int btn_manage=0x7f05000e;
+        public static final int btn_manage=0x7f050010;
         public static final int btn_ok=0x7f050002;
-        public static final int btn_refresh=0x7f050010;
-        public static final int btn_search=0x7f050011;
-        public static final int btn_select=0x7f05000c;
-        public static final int item_description=0x7f050007;
-        public static final int item_provider=0x7f050008;
-        public static final int item_pubdate=0x7f050009;
-        public static final int item_title=0x7f050006;
-        public static final int lst_rss_provider=0x7f05000d;
+        public static final int btn_refresh=0x7f050012;
+        public static final int btn_search=0x7f050013;
+        public static final int btn_select=0x7f05000e;
+        public static final int btn_setting=0x7f05000d;
+        public static final int item_description=0x7f050009;
+        public static final int item_new=0x7f050008;
+        public static final int item_provider=0x7f05000a;
+        public static final int item_pubdate=0x7f05000b;
+        public static final int item_title=0x7f050007;
+        public static final int lst_rss_provider=0x7f05000f;
         public static final int rss_item_content=0x7f050005;
+        public static final int rss_item_list=0x7f050006;
         public static final int rss_item_title=0x7f050004;
         public static final int txt_provider_link=0x7f050001;
         public static final int txt_provider_name=0x7f050000;
-        public static final int txt_search=0x7f050012;
+        public static final int txt_search=0x7f050014;
     }
     public static final class layout {
         public static final int rss_add=0x7f030000;
@@ -62,16 +64,20 @@ public final class R {
         public static final int btn_select_all_text=0x7f04001a;
         public static final int btn_select_mode_text=0x7f040017;
         public static final int btn_select_none_text=0x7f04001b;
+        public static final int btn_setting_text=0x7f040023;
         public static final int rss_add_blank_error=0x7f04000e;
         public static final int rss_add_provider=0x7f040011;
         public static final int rss_choose_provider=0x7f040010;
         public static final int rss_content_loading=0x7f04000d;
+        public static final int rss_delete_provider=0x7f040021;
         public static final int rss_fetching=0x7f040013;
         public static final int rss_item_not_update=0x7f04001e;
         public static final int rss_items_update_done=0x7f040012;
         public static final int rss_keep_updating=0x7f04001d;
+        public static final int rss_provider_link_exists=0x7f040022;
         public static final int rss_source_invalid=0x7f04000f;
         public static final int rss_source_validate=0x7f040015;
+        public static final int rss_update_notification=0x7f040024;
         public static final int txt_item_empty_text=0x7f040002;
         public static final int txt_provider_link_hint=0x7f04000c;
         public static final int txt_provider_name_hint=0x7f04000b;

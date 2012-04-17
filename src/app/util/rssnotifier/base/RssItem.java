@@ -6,6 +6,7 @@ public class RssItem {
 	private String description;
 	private String link;
 	private String pubdate;
+	private int updated;
 	
 	public RssItem() {
 		provider = "";
@@ -15,12 +16,13 @@ public class RssItem {
 		pubdate = "";
 	}
 	
-	public RssItem(String _provider, String _title, String _description, String _link, String _pubdate) {
+	public RssItem(String _provider, String _title, String _description, String _link, String _pubdate, int _updated) {
 		setProvider(_provider);
 		setTitle(_title);
 		setDescription(_description);
 		setLink(_link);
 		setPubDate(_pubdate);
+		setUpdated(_updated);
 	}
 	
 	public void setProvider(String _provider) {
@@ -43,6 +45,10 @@ public class RssItem {
 		pubdate = _pubdate;
 	}
 	
+	public void setUpdated(int _updated) {
+		updated = _updated;
+	}
+	
 	public String getProvider() {
 		return provider;
 	}
@@ -61,6 +67,10 @@ public class RssItem {
 	
 	public String getPubDate() {
 		return pubdate;
+	}
+	
+	public int getUpdated() {
+		return updated;
 	}
 	
 	@Override

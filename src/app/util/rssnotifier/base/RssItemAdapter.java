@@ -29,6 +29,7 @@ public class RssItemAdapter extends ArrayAdapter<RssItem> {
 			row = layoutInflater.inflate(R.layout.rss_item_list, parent, false);
 		}
 		
+		ImageView itemNew = (ImageView) row.findViewById(R.id.item_new);
 		TextView title = (TextView) row.findViewById(R.id.item_title);
 		TextView description = (TextView) row.findViewById(R.id.item_description);
 		TextView provider = (TextView) row.findViewById(R.id.item_provider);
@@ -46,7 +47,11 @@ public class RssItemAdapter extends ArrayAdapter<RssItem> {
 		Date date = new Date(Long.parseLong(item.getPubDate()));
 		pubDate.setText(date.toLocaleString());
 		
+		if (item.getUpdated() == 1)
+			itemNew.setVisibility(View.VISIBLE);
+		else
+			itemNew.setVisibility(View.GONE);
+		
 		return row;
 	}
-
 }

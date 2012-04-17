@@ -16,14 +16,13 @@
             android:text="@string/btn_add_text" />
 
         <Button
-            android:id="@+id/btn_delete"
+            android:id="@+id/btn_setting"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/btn_add"
-            android:visibility="gone"
-            android:text="@string/btn_delete_text" />
+            android:text="@string/btn_setting_text" />
 
         <Button
             android:id="@+id/btn_select"
