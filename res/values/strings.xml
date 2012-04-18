@@ -35,7 +35,17 @@
     <string name="btn_done_text">Done</string>
     <string name="rss_delete_provider">Are you sure?</string>
     <string name="rss_provider_link_exists">The input provider link existed</string>
-    <string name="btn_setting_text">Seting</string>
+    <string name="btn_setting_text">Setting</string>
     <string name="rss_update_notification">New RSS updated</string>
+    <string name="txt_provider_name_label">Name:</string>
+    <string name="txt_provider_link_label">Link:</string>
+    <string name="minutes">minutes</string>
+    <string name="service_running">Notification Service is running</string>
+    <string name="service_stopped">Notification Service stopped</string>
+    <string name="service_title">Notification Service</string>
+    <string name="items">items</string>
+    <string name="btn_save_text">Save</string>
+    <string name="invalid_input_number">Invalid input number</string>
+    <string name="input_number_dialog_title">Enter a number to change settings</string>
 
 </resources>

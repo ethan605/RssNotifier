@@ -1,13 +1,21 @@
 package app.util.rssnotifier.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import app.util.rssnotifier.RssReaderActivity;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String DATABASE_NAME = "RssNotifier";
-	public static final String DATABASE_PATH = "/data/data/app.util.test/databases/";
+	public static final String DATABASE_PATH = "/data/data/app.util.rssnotifier/databases/";
 	public static final int DATABASE_VERSION = 1;
+	
+	public static final String TABLE_RSS_SETTING_CREATE =
+		"create table " + DatabaseQuery.TABLE_RSS_SETTING + " (" +
+				DatabaseQuery.TABLE_ID + " integer primary key autoincrement, " +
+				DatabaseQuery.RSS_SETTING_TIME_INTERVAL + " integer not null, " + 
+				DatabaseQuery.RSS_SETTING_MAX_ITEM_LOAD + " integer not null);";
 
 	public static final String TABLE_RSS_ITEM_CREATE = 
 		"create table " + DatabaseQuery.TABLE_RSS_ITEM + " (" +
@@ -33,8 +41,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		db.execSQL(TABLE_RSS_SETTING_CREATE);
 		db.execSQL(TABLE_RSS_ITEM_CREATE);
 		db.execSQL(TABLE_RSS_PROVIDER_CREATE);
+		
+		ContentValues value = new ContentValues();
+		value.put(DatabaseQuery.RSS_SETTING_TIME_INTERVAL, DatabaseQuery.DEF_TIME_INTERVAL);
+		value.put(DatabaseQuery.RSS_SETTING_MAX_ITEM_LOAD, DatabaseQuery.DEF_MAX_ITEM_LOAD);
+		db.insert(DatabaseQuery.TABLE_RSS_SETTING, null, value);
 	}
 	
 	@Override

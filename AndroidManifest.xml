@@ -29,6 +29,14 @@
             android:name=".RssManageActivity"
             android:configChanges="orientation" >
         </activity>
+        <activity
+            android:name=".RssSettingActivity"
+            android:configChanges="orientation" >
+        </activity>
+        <activity
+            android:name=".RssProviderSettingActivity"
+            android:configChanges="orientation" >
+        </activity>
         <service android:name=".RssNotificationService" >
         </service>
     </application>

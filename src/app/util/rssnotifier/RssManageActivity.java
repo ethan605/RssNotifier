@@ -87,6 +87,7 @@ public class RssManageActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.btn_setting:
 			if (btnSetting.getText().toString().equals("Setting")) {
+				startActivity(new Intent(RssManageActivity.this, RssSettingActivity.class));
 				break;
 			}
 			

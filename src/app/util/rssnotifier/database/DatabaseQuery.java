@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import app.util.rssnotifier.base.RssFeed;
@@ -17,6 +16,12 @@ public class DatabaseQuery {
 
 	public static final String TABLE_ID = "_id";
 	public static final String QUOTE_WRAPER = "\"";
+	
+	public static final String TABLE_RSS_SETTING = "RssSeting";
+	public static final String RSS_SETTING_TIME_INTERVAL = "time_interval";
+	public static final String RSS_SETTING_MAX_ITEM_LOAD = "max_item_load";
+	public static final int DEF_TIME_INTERVAL = 10;
+	public static final int DEF_MAX_ITEM_LOAD = 20;
 	
 	public static final String TABLE_RSS_ITEM = "RssItem";
 	public static final String RSS_ITEM_PROVIDER = "provider";
@@ -32,6 +37,7 @@ public class DatabaseQuery {
 	public static final String RSS_PROVIDER_NAME = "name";
 	public static final String RSS_PROVIDER_LINK = "link";
 	
+	private static final String[] RSS_SETTING_KEYS = {TABLE_ID, RSS_SETTING_TIME_INTERVAL, RSS_SETTING_MAX_ITEM_LOAD};
 	private static final String[] RSS_ITEM_KEYS = {TABLE_ID, RSS_ITEM_PROVIDER, RSS_ITEM_TITLE, RSS_ITEM_DESCRIPTION, RSS_ITEM_LINK, RSS_ITEM_PUBDATE, RSS_ITEM_UPDATED};	
 	private static final String[] RSS_PROVIDER_KEYS = {TABLE_ID, RSS_PROVIDER_NAME, RSS_PROVIDER_LINK};
 	
@@ -106,21 +112,36 @@ public class DatabaseQuery {
 		return db.query(TABLE_RSS_PROVIDER, RSS_PROVIDER_KEYS, criteria, null, null, null, null);
 	}
 	
+	public void updateRssSettings(int[] settings) {
+		ContentValues value = new ContentValues();
+		if (settings[0] != 0)
+			value.put(RSS_SETTING_TIME_INTERVAL, settings[0]);
+		if (settings[1] != 0)
+			value.put(RSS_SETTING_MAX_ITEM_LOAD, settings[1]);
+		db.update(TABLE_RSS_SETTING, value, TABLE_ID + "=1", null);
+	}
+	
+	public int[] getRssSettings() {
+		int[] ret = null;
+		Cursor cursor = db.query(TABLE_RSS_SETTING, RSS_SETTING_KEYS, null, null, null, null, null);
+		cursor.moveToFirst();
+		if (!cursor.isAfterLast())
+			ret = new int[] {cursor.getInt(1), cursor.getInt(2)};
+		return ret;
+	}
+	
 	public ArrayList<RssItem> searchRssItem(String searchWord) {
 		searchWord = UnicodeToAscii.convert(searchWord).toLowerCase();
 		String criteria = RSS_ITEM_TITLE_CLEAN + " LIKE \"%" + searchWord + "%\"" +
 					" OR " + RSS_ITEM_DESCRIPTION_CLEAN + " LIKE \"%" + searchWord + "%\"";
 		Cursor cursor = db.query(TABLE_RSS_ITEM, RSS_ITEM_KEYS, criteria, null, null, null, RSS_ITEM_PUBDATE + " DESC");
 		
-		ArrayList<RssItem> ret = null;
-		if (cursor != null) {
-			ret = new ArrayList<RssItem>();
-			cursor.moveToFirst();
-			while (!cursor.isAfterLast()) {
-				ret.add(new RssItem(cursor.getString(1), cursor.getString(2), cursor.getString(3),
-									cursor.getString(4), cursor.getString(5), cursor.getInt(6)));
-				cursor.moveToNext();
-			}
+		ArrayList<RssItem> ret = new ArrayList<RssItem>();
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			ret.add(new RssItem(cursor.getString(1), cursor.getString(2), cursor.getString(3),
+					cursor.getString(4), cursor.getString(5), cursor.getInt(6)));
+			cursor.moveToNext();
 		}
 		
 		return ret;

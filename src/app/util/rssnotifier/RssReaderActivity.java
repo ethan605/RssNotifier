@@ -28,7 +28,7 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 	private RssProviderList rssProvider = null;
 	private ArrayList<RssItem> rssList = null;
 	private RssItemAdapter rssAdapter = null;
-	private int curProvider, maxItemLoad = 20;
+	private int curProvider, maxItemLoad = -1;
 	private DatabaseQuery dbQuery;
 	
 	/** Called when the activity is first created. */
@@ -61,7 +61,7 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 			updateListView();
 			dbQuery.updateRssItems();
 		} else
-			loadData(null, maxItemLoad, false, true);
+			loadData(null, true, false, true);
 	}
 	
 	@Override
@@ -131,10 +131,10 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 						@Override
 						public void onClick(DialogInterface dialog, int item) {
 							if (item == 0) {
-								loadData(null, maxItemLoad, false, false);
+								loadData(null, true, false, false);
 								return;
 							}
-							loadData(rssProvider.getProviderNames()[item-1], 0, false, false);
+							loadData(rssProvider.getProviderNames()[item-1], false, false, false);
 							curProvider = item-1;
 							updateListView();
 						}
@@ -144,9 +144,9 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 		
 		case R.id.btn_refresh:
 			if (curProvider == -1)
-				loadData(null, maxItemLoad, true, true);
+				loadData(null, true, true, true);
 			else
-				loadData(dbQuery.getRssProviderList(null).getProviderNames()[curProvider], 0, true, true);
+				loadData(dbQuery.getRssProviderList(null).getProviderNames()[curProvider], false, true, true);
 			break;
 		
 		case R.id.btn_search:
@@ -164,7 +164,7 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 				btnSearch.setText(R.string.btn_search_text);
 				txtSearch.setVisibility(View.GONE);
 				txtSearch.setText("");
-				loadData(null, maxItemLoad, false, false);
+				loadData(null, true, false, false);
 			}
 			break;
 		default:
@@ -179,11 +179,11 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 			switch (resultCode) {
 			case RES_RSS_ADD:
 				String[] addProvider = data.getStringArrayExtra("add-provider");
-				loadData(addProvider[0], 0, true, true);
+				loadData(addProvider[0], false, true, true);
 				curProvider = dbQuery.getRssProviderList(null).length()-1;
 				break;
 			case RES_RSS_DELETE:
-				loadData(null, maxItemLoad, false, false);
+				loadData(null, true, false, false);
 				break;
 			default:
 				break;
@@ -266,19 +266,17 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 	
 	private void init() {
 		dbQuery = new DatabaseQuery(this);
-	    dbQuery.openDB();
-	    rssFeed = new RssFeed();
-	    rssProvider = dbQuery.getRssProviderList(null);
-	    rssList = new ArrayList<RssItem>();
-	    rssAdapter = new RssItemAdapter(this, R.layout.rss_item_list, rssList);
-	    setListAdapter(rssAdapter);
-	    
-	    if (!isServiceRunning(RssNotificationService.class.getCanonicalName()))
-	    	startService(new Intent(RssReaderActivity.this, RssNotificationService.class));
+		dbQuery.openDB();
+		rssFeed = new RssFeed();
+		rssProvider = dbQuery.getRssProviderList(null);
+		rssList = new ArrayList<RssItem>();
+		rssAdapter = new RssItemAdapter(this, R.layout.rss_item_list, rssList);
+		setListAdapter(rssAdapter);
 	}
 	
-	private void loadData(String providerName, int limit, boolean dialogShow, boolean update) {
-		rssFeed = dbQuery.getRssFeed(providerName, limit);
+	private void loadData(String providerName, boolean limit, boolean dialogShow, boolean update) {
+		int maxItemLoad = limit ? dbQuery.getRssSettings()[1] : 0;
+		rssFeed = dbQuery.getRssFeed(providerName, maxItemLoad);
 		
 		if (providerName == null)
 			curProvider = -1;
@@ -287,7 +285,7 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 		if (isTaskRunning)
 			Toast.makeText(RssReaderActivity.this, R.string.rss_keep_updating, Toast.LENGTH_SHORT);
 		else if (update)
-			new RssDownloadTask(providerName, limit, dialogShow).execute();
+			new RssDownloadTask(providerName, maxItemLoad, dialogShow).execute();
 	}
 	
 	private boolean fetchRss(String _provider, String _url) {
@@ -304,13 +302,5 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 			rssList.addAll(rssFeed.getList());
 		rssAdapter.notifyDataSetChanged();
 		this.getListView().setSelection(0);
-	}
-	
-	private boolean isServiceRunning(String serviceName) {
-	    ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
-	        if (service.service.getClassName().equals(serviceName))
-	            return true;
-	    return false;
 	}
 }

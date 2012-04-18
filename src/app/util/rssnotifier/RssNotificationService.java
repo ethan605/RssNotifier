@@ -22,6 +22,7 @@ import app.util.rssnotifier.database.DatabaseQuery;
 public class RssNotificationService extends Service implements Runnable {
 	protected final static String ACTION = "RssNotificationServiceAction";
 	protected static final int RSS_NOTIFICATION_ID = 1;
+	protected static final int ONE_MINUTE = 1000*60;
 	final String TAG = "RssNotificationService";
 	
 	private NotifyServiceReceiver notifyServiceReceiver;
@@ -89,8 +90,9 @@ public class RssNotificationService extends Service implements Runnable {
 					for (int i = 0; i < updatedProvider.size(); i++)
 						mContent += updatedProvider.get(i) +  " ";
 					updateNotification();
-				}				
-				handler.postDelayed(RssNotificationService.this, 1000*60*5);
+				}
+
+				handler.postDelayed(RssNotificationService.this, ONE_MINUTE*dbQuery.getRssSettings()[0]);
 			}
 		}.execute();
 	}
