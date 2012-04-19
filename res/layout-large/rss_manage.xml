@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#8E1B01" >
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="70dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/add" />
+
+        <TextView
+            android:id="@+id/txt_add_label"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:layout_below="@+id/btn_add"
+            android:text="@string/btn_add_text" />
+        <Button
+            android:id="@+id/btn_setting"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/setting" />
+
+        <TextView
+            android:id="@+id/txt_setting_label"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_below="@+id/btn_add"
+            android:text="@string/btn_setting_text" />
+
+        <Button
+            android:id="@+id/btn_select"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="70dp"
+            android:background="@drawable/select" />
+
+        <TextView
+            android:id="@+id/txt_select_label"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="70dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:layout_below="@+id/btn_select"
+            android:text="@string/btn_select_text" />
+
+    </RelativeLayout>
+
+    <ListView
+		android:id="@+id/lst_rss_provider"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
+
+</LinearLayout>

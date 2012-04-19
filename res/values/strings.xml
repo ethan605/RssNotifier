@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">RssNotifier</string>
-    <string name="btn_add_text">Add new</string>
+    <string name="btn_add_text">Add</string>
     <string name="txt_item_empty_text">No RSS item fetched</string>
     <string name="btn_more_text">More details</string>
     <string name="btn_browse_text">Browse</string>
@@ -22,13 +22,12 @@
     <string name="rss_fetching">Fetching RSS</string>
     <string name="btn_hide_text">Hide</string>
     <string name="rss_source_validate">Validating RSS source</string>
-    <string name="btn_manage_text">Manage</string>
-    <string name="btn_select_mode_text">Select mode</string>
+    <string name="btn_manage_text">Tools</string>
+    <string name="btn_select_text">Select</string>
     <string name="btn_search_text">Search</string>
     <string name="btn_delete_text">Delete</string>
-    <string name="btn_select_all_text">Select all</string>
-    <string name="btn_select_none_text">Select none</string>
-    <string name="btn_browse_mode_text">Browse mode</string>
+    <string name="btn_select_all_text">All</string>
+    <string name="btn_select_none_text">None</string>
     <string name="rss_keep_updating">RSS update still running</string>
     <string name="rss_item_not_update">No RSS updated</string>
     <string name="txt_search_hint">Type to search news</string>
@@ -47,5 +46,19 @@
     <string name="btn_save_text">Save</string>
     <string name="invalid_input_number">Invalid input number</string>
     <string name="input_number_dialog_title">Enter a number to change settings</string>
-
+    <string name="rss_start_updating">Start updating RSS</string>
+    <string name="rss_setting_title">Setting Panel</string>
+    <string name="rss_manage_title">Manage Panel</string>
+    <string name="back_again_to_exit">Tap back button again to exit</string>
+    <string name="txt_max_item_load_title">Maximum Item Load</string>
+    <string name="txt_max_item_load_description">Maximum number of items will be loaded when there are too many news</string>
+    <string name="txt_time_interval_title">Time Interval</string>
+    <string name="txt_time_interval_description">Amount of time for notification service to regularly check for new RSS update</string>
+    <string name="txt_trimmed_text_size_title">Trimmed Text Size</string>
+    <string name="txt_trimmed_text_size_description">Amount of maximum characters shown in RSS item description</string>
+    <string name="characters">characters</string>
+    <string name="restart_to_change">This setting requires application restarting to apply changes</string>
+    
+    <string name="mnu_exit_text">Exit</string>
+	<string name="mnu_about_text">About</string>
 </resources>

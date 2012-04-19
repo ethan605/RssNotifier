@@ -2,53 +2,93 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@drawable/bg" >
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#8E1B01" >
         <Button
             android:id="@+id/btn_manage"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/manage" />
+        <TextView
+            android:id="@+id/txt_manage_label"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/btn_browse"
-            android:layout_marginRight="7dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="25dp"
+            android:gravity="center"
+            android:layout_below="@+id/btn_manage"
             android:text="@string/btn_manage_text" />
+        
         <Button
             android:id="@+id/btn_browse"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@+id/btn_manage"
+            android:background="@drawable/browse" />
+        <TextView
+            android:id="@+id/txt_browse_label"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/btn_refresh"
-			android:layout_marginRight="7dp"
+            android:layout_marginLeft="20dp"
+            android:gravity="center"
+            android:layout_toRightOf="@+id/txt_manage_label"
+            android:layout_below="@+id/btn_manage"
             android:text="@string/btn_browse_text" />
+        
         <Button
             android:id="@+id/btn_refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/btn_search"
-            android:layout_marginRight="7dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/refresh" />
+        <TextView
+            android:id="@+id/txt_refresh_label"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:layout_toLeftOf="@+id/txt_search_label"
+            android:layout_below="@+id/btn_refresh"
             android:text="@string/btn_refresh_text" />
-
+        
         <EditText
             android:id="@+id/txt_search"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/btn_search"
-            android:layout_marginRight="7dp"
+            android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
             android:visibility="gone"
             android:hint="@string/txt_search_hint" />
         <Button
             android:id="@+id/btn_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/search" />
+        <TextView
+            android:id="@+id/txt_search_label"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="25dp"
+            android:gravity="center"
+            android:layout_below="@+id/btn_search"
             android:text="@string/btn_search_text" />
         
     </RelativeLayout>
@@ -56,5 +96,6 @@
     <ListView
 		android:id="@android:id/list"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" />
+		android:layout_height="wrap_content"
+		android:cacheColorHint="#00000000" />
 </LinearLayout>

@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import app.util.rssnotifier.database.DatabaseQuery;
 
 public class RssSettingActivity extends Activity implements OnClickListener {
@@ -28,6 +29,9 @@ public class RssSettingActivity extends Activity implements OnClickListener {
 
 	private RelativeLayout maxItemLoadSetting;
 	private TextView txtMaxItemLoadValue;
+	
+	private RelativeLayout trimmedTextSize;
+	private TextView txtTrimmedTextSizeValue;
 	
 	private DatabaseQuery dbQuery;
 	
@@ -46,10 +50,14 @@ public class RssSettingActivity extends Activity implements OnClickListener {
 		maxItemLoadSetting = (RelativeLayout) findViewById(R.id.max_item_load_setting);
 		txtMaxItemLoadValue = (TextView) findViewById(R.id.txt_max_item_load_value);
 		
+		trimmedTextSize = (RelativeLayout) findViewById(R.id.trimmed_text_size);
+		txtTrimmedTextSizeValue = (TextView) findViewById(R.id.txt_trimmed_text_size_value);
+		
 		serviceSetting.setOnClickListener(this);
 		ckboxServiceEnable.setOnClickListener(this);
 		timeIntervalSetting.setOnClickListener(this);
 		maxItemLoadSetting.setOnClickListener(this);
+		trimmedTextSize.setOnClickListener(this);
 		
 		if (isServiceRunning(RssNotificationService.class.getCanonicalName())) {
 			ckboxServiceEnable.setChecked(true);
@@ -65,6 +73,7 @@ public class RssSettingActivity extends Activity implements OnClickListener {
 		int[] settings = dbQuery.getRssSettings();
 		txtTimeIntervalValue.setText(settings[0] + " " + getString(R.string.minutes));
 		txtMaxItemLoadValue.setText(settings[1] + " " + getString(R.string.items));
+		txtTrimmedTextSizeValue.setText(settings[2] + " " + getString(R.string.characters));
 	}
 	
 	@Override
@@ -92,11 +101,13 @@ public class RssSettingActivity extends Activity implements OnClickListener {
 			}
 			break;
 		case R.id.time_interval_setting:
-			new InputNumberDialog(this, R.id.time_interval_setting).show();
+			new InputNumberDialog(this, R.id.time_interval_setting, 1, 100).show();
 			break;
 		case R.id.max_item_load_setting:
-			new InputNumberDialog(this, R.id.max_item_load_setting).show();
+			new InputNumberDialog(this, R.id.max_item_load_setting, 1, 100).show();
 			break;
+		case R.id.trimmed_text_size:
+			new InputNumberDialog(this, R.id.trimmed_text_size, 1, 1000).show();
 		default:
 			break;
 		}
@@ -105,14 +116,17 @@ public class RssSettingActivity extends Activity implements OnClickListener {
 	private class InputNumberDialog extends Dialog {
 		private EditText txtInputNumber;
 		private Button btnSave;
-		private int viewId;
-		public InputNumberDialog(Context context, int id) {
+		private int viewId, minValue, maxValue;
+		public InputNumberDialog(Context context, int id, int min, int max) {
 			super(context);
 			setContentView(R.layout.input_number_dialog);
 			setTitle(R.string.input_number_dialog_title);
 			
 			viewId = id;
+			minValue = min;
+			maxValue = max;
 			txtInputNumber = (EditText) findViewById(R.id.txt_input_number);
+			txtInputNumber.setHint("(" + minValue + " - " + maxValue + ")");
 			btnSave = (Button) findViewById(R.id.btn_save);
 			
 			btnSave.setOnClickListener(new View.OnClickListener() {
@@ -122,14 +136,20 @@ public class RssSettingActivity extends Activity implements OnClickListener {
 						return;
 					
 					int inputNumber = Integer.parseInt(txtInputNumber.getText().toString());
-					if (inputNumber >= 1 && inputNumber <= 100) {
+					if (inputNumber < minValue || inputNumber > maxValue)
+						Toast.makeText(RssSettingActivity.this, R.string.invalid_input_number, Toast.LENGTH_SHORT).show();
+					else {
 						if (viewId == R.id.time_interval_setting) {
 							txtTimeIntervalValue.setText(inputNumber + " " + getString(R.string.minutes));
-							dbQuery.updateRssSettings(new int[] {inputNumber, 0});
+							dbQuery.updateRssSettings(new int[] {inputNumber, 0, 0});
 						}
-						else {
+						else if (viewId == R.id.max_item_load_setting) {
 							txtMaxItemLoadValue.setText(inputNumber + " " + getString(R.string.items));
-							dbQuery.updateRssSettings(new int[] {0, inputNumber});
+							dbQuery.updateRssSettings(new int[] {0, inputNumber, 0});
+						} else {
+							Toast.makeText(RssSettingActivity.this, R.string.restart_to_change, Toast.LENGTH_SHORT).show();
+							txtTrimmedTextSizeValue.setText(inputNumber + " " + getString(R.string.characters));
+							dbQuery.updateRssSettings(new int[] {0, 0, inputNumber});
 						}
 						cancel();
 					}

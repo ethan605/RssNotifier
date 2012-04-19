@@ -28,8 +28,11 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 	private RssProviderList rssProvider = null;
 	private ArrayList<RssItem> rssList = null;
 	private RssItemAdapter rssAdapter = null;
-	private int curProvider, maxItemLoad = -1;
+	private int curProvider;
 	private DatabaseQuery dbQuery;
+	
+	private Button btnManage, btnBrowse, btnRefresh, btnSearch;
+	private EditText txtSearch;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -38,14 +41,17 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 		setContentView(R.layout.rss_reader);
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
-		Button btnManage = (Button) findViewById(R.id.btn_manage),
-				btnBrowse = (Button) findViewById(R.id.btn_browse),
-				btnRefresh = (Button) findViewById(R.id.btn_refresh),
-				btnSearch = (Button) findViewById(R.id.btn_search);
+		btnManage = (Button) findViewById(R.id.btn_manage);
+		btnBrowse = (Button) findViewById(R.id.btn_browse);
+		btnRefresh = (Button) findViewById(R.id.btn_refresh);
+		btnSearch = (Button) findViewById(R.id.btn_search);
+		
 		btnManage.setOnClickListener(this);
 		btnBrowse.setOnClickListener(this);
 		btnRefresh.setOnClickListener(this);
 		btnSearch.setOnClickListener(this);
+		
+		txtSearch = (EditText) findViewById(R.id.txt_search);
 		
 		init();
 
@@ -81,11 +87,11 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 	
 	@Override
 	public void onClick(View v) {
-		Button btnManage = (Button) findViewById(R.id.btn_manage),
-	    		btnBrowse = (Button) findViewById(R.id.btn_browse),
-	    		btnRefresh = (Button) findViewById(R.id.btn_refresh),
-	    		btnSearch = (Button) findViewById(R.id.btn_search);
-		EditText txtSearch = (EditText) findViewById(R.id.txt_search);
+		TextView txtManageLabel, txtBrowseLabel, txtRefreshLabel, txtSearchLabel;
+		txtManageLabel = (TextView) findViewById(R.id.txt_manage_label);
+		txtBrowseLabel = (TextView) findViewById(R.id.txt_browse_label);
+		txtRefreshLabel = (TextView) findViewById(R.id.txt_refresh_label);
+		txtSearchLabel = (TextView) findViewById(R.id.txt_search_label);
 		txtSearch.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -150,18 +156,26 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 			break;
 		
 		case R.id.btn_search:
-			if (btnSearch.getText().toString().equals(getString(R.string.btn_search_text))) {
+			if (txtSearchLabel.getText().toString().equals(getString(R.string.btn_search_text))) {
 				btnManage.setVisibility(View.GONE);
+				txtManageLabel.setVisibility(View.GONE);
 				btnBrowse.setVisibility(View.GONE);
+				txtBrowseLabel.setVisibility(View.GONE);
 				btnRefresh.setVisibility(View.GONE);
-				btnSearch.setText(R.string.btn_done_text);
+				txtRefreshLabel.setVisibility(View.GONE);
+				btnSearch.setBackgroundResource(R.drawable.done);
+				txtSearchLabel.setText(R.string.btn_done_text);
 				txtSearch.setVisibility(View.VISIBLE);
 				txtSearch.requestFocus();
 			} else {
 				btnManage.setVisibility(View.VISIBLE);
+				txtManageLabel.setVisibility(View.VISIBLE);
 				btnBrowse.setVisibility(View.VISIBLE);
+				txtBrowseLabel.setVisibility(View.VISIBLE);
 				btnRefresh.setVisibility(View.VISIBLE);
-				btnSearch.setText(R.string.btn_search_text);
+				txtRefreshLabel.setVisibility(View.VISIBLE);
+				btnSearch.setBackgroundResource(R.drawable.search);
+				txtSearchLabel.setText(R.string.btn_search_text);
 				txtSearch.setVisibility(View.GONE);
 				txtSearch.setText("");
 				loadData(null, true, false, false);
@@ -196,23 +210,45 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 	
 	@Override
 	public void onBackPressed() {
-		if (isTaskRunning)
-			Toast.makeText(getApplicationContext(), R.string.rss_keep_updating, Toast.LENGTH_SHORT);
-		else
-			finish();
+		moveTaskToBack(true);
 	}
 	
-	private class RssDownloadTask extends AsyncTask<String, Void, Void> {
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater myMenuInflater = getMenuInflater();
+		myMenuInflater.inflate(R.menu.menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+		
+		switch(item.getItemId()) {
+		case R.id.mnu_exit:
+			if (!isTaskRunning)
+				finish();
+			else
+				Toast.makeText(RssReaderActivity.this, R.string.rss_keep_updating, Toast.LENGTH_SHORT).show();
+			break;
+		case R.id.mnu_about:
+			break;
+		default:
+			break;
+		}
+		return true;
+	}
+	
+	private class RssDownloadTask extends AsyncTask<String, Void, Boolean> {
 		private ProgressDialog progDialog;
 		private String name;
 		private int limit;
-		private boolean dialogShow, hasUpdate;
+		private boolean dialogShow;
 		
 		public RssDownloadTask(String _name, int _limit, boolean _dialogShow) {
 			name = _name;
 			limit = _limit;
 			dialogShow = _dialogShow;
-			hasUpdate = false;
 		}
 		
 		@Override
@@ -229,30 +265,32 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 					}
 				});
 				progDialog.show();
-			}
+			} else
+				Toast.makeText(RssReaderActivity.this, R.string.rss_start_updating, Toast.LENGTH_SHORT).show();
 			
 			isTaskRunning = true;
 		}
 		
 		@Override
-		protected Void doInBackground(String... urls) {
+		protected Boolean doInBackground(String... urls) {
 			rssProvider = dbQuery.getRssProviderList(name); 
 			String[] providerNames = rssProvider.getProviderNames();
 			
+			boolean hasUpdate = false;
 			for (int i = 0; i < providerNames.length; i++) {
 				String[] providerLinks = rssProvider.getProviderLinks(providerNames[i]);
 				for (int j = 0; j < providerLinks.length; j++)
 					if (fetchRss(providerNames[i], providerLinks[j]))
 						hasUpdate = true;
 			}
-			return null;
+			return hasUpdate;
 		}
 		
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(Boolean result) {
 			if (dialogShow)
 				progDialog.cancel();
-			if (hasUpdate) {
+			if (result) {
 				Toast.makeText(RssReaderActivity.this, R.string.rss_items_update_done, Toast.LENGTH_SHORT).show();
 				rssFeed = dbQuery.getRssFeed(name, limit);
 				updateListView();
@@ -272,6 +310,9 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 		rssList = new ArrayList<RssItem>();
 		rssAdapter = new RssItemAdapter(this, R.layout.rss_item_list, rssList);
 		setListAdapter(rssAdapter);
+		
+		if (!isServiceRunning(RssNotificationService.class.getCanonicalName()))
+			startService(new Intent(RssReaderActivity.this, RssNotificationService.class));
 	}
 	
 	private void loadData(String providerName, boolean limit, boolean dialogShow, boolean update) {
@@ -283,7 +324,7 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 		updateListView();
 		
 		if (isTaskRunning)
-			Toast.makeText(RssReaderActivity.this, R.string.rss_keep_updating, Toast.LENGTH_SHORT);
+			Toast.makeText(RssReaderActivity.this, R.string.rss_keep_updating, Toast.LENGTH_SHORT).show();
 		else if (update)
 			new RssDownloadTask(providerName, maxItemLoad, dialogShow).execute();
 	}
@@ -294,6 +335,14 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 	    	return dbQuery.insertRssFeed(_feed);
 		
 		return false;
+	}
+	
+	private boolean isServiceRunning(String serviceName) {
+	    ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+	    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+	        if (service.service.getClassName().equals(serviceName))
+	            return true;
+	    return false;
 	}
 	
 	private void updateListView() {

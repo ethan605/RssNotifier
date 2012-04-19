@@ -40,5 +40,4 @@
         <service android:name=".RssNotificationService" >
         </service>
     </application>
-
 </manifest>

@@ -2,13 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@drawable/bg" >
+    
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#8E1B01" >
+
+        <TextView
+            android:id="@+id/rss_item_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="@string/rss_setting_title"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/service_setting"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp" >
+        android:layout_margin="10dp" >
 
         <TextView
             android:id="@+id/txt_service_setting_title"
@@ -21,6 +39,7 @@
             android:id="@+id/txt_service_setting_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_below="@+id/txt_service_setting_title"
             android:textSize="11sp"
             android:text="@string/service_running" />
@@ -36,28 +55,29 @@
         android:id="@+id/time_interval_setting"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp" >
+        android:layout_margin="10dp" >
 
         <TextView
             android:id="@+id/txt_time_interval_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time Interval"
+            android:text="@string/txt_time_interval_title"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/txt_time_interval_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_below="@+id/txt_time_interval_title"
             android:layout_toLeftOf="@+id/txt_time_interval_value"
             android:layout_marginRight="20dp"
             android:textSize="11sp"
-            android:text="Amount of time for notification service to regularly check for new RSS update" />
+            android:text="@string/txt_time_interval_description" />
 
         <TextView
             android:id="@+id/txt_time_interval_value"
-            android:layout_width="55dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -69,33 +89,69 @@
         android:id="@+id/max_item_load_setting"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp" >
+        android:layout_margin="10dp" >
 
         <TextView
             android:id="@+id/txt_max_item_load_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Maximum Item Load"
+            android:text="@string/txt_max_item_load_title"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/txt_max_item_load_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/txt_max_item_load_value"
             android:layout_marginRight="20dp"
             android:layout_below="@+id/txt_max_item_load_title"
             android:textSize="11sp"
-            android:text="Maximum number of items will be loaded when there're too many news" />
+            android:text="@string/txt_max_item_load_description" />
         
         <TextView
             android:id="@+id/txt_max_item_load_value"
-            android:layout_width="50dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:gravity="center"
             android:text="20 items" />
+
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/trimmed_text_size"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp" >
+
+        <TextView
+            android:id="@+id/txt_trimmed_text_size_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_trimmed_text_size_title"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/txt_trimmed_text_size_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/txt_trimmed_text_size_value"
+            android:layout_marginRight="20dp"
+            android:layout_below="@+id/txt_trimmed_text_size_title"
+            android:textSize="11sp"
+            android:text="@string/txt_trimmed_text_size_description" />
+        
+        <TextView
+            android:id="@+id/txt_trimmed_text_size_value"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="500 characters" />
 
     </RelativeLayout>
 

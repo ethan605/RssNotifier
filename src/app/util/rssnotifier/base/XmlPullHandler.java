@@ -136,19 +136,17 @@ public class XmlPullHandler {
     }
     
     public static boolean feedValidate(String url) {
-    	boolean validate = false;
-    	
     	try {
     		String xml = getXmlFromUrl(url);
     		if (xml != null)
-    			validate = (xml.indexOf("<?xml") != -1 && xml.indexOf("<rss") != -1);
+    			return (xml.indexOf("<?xml") != -1 && xml.indexOf("<rss") != -1);
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			return false;
 		} catch (IOException e) {
-			e.printStackTrace();
+			return false;
 		}
     	
-    	return validate;
+    	return false;
     }
     
     public RssFeed getFeed() {

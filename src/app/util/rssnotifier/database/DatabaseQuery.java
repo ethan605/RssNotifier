@@ -6,6 +6,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import app.util.rssnotifier.base.RssFeed;
 import app.util.rssnotifier.base.RssItem;
@@ -20,8 +22,10 @@ public class DatabaseQuery {
 	public static final String TABLE_RSS_SETTING = "RssSeting";
 	public static final String RSS_SETTING_TIME_INTERVAL = "time_interval";
 	public static final String RSS_SETTING_MAX_ITEM_LOAD = "max_item_load";
+	public static final String RSS_SETTING_TRIMMED_TEXT_SIZE = "trimmed_text_size";
 	public static final int DEF_TIME_INTERVAL = 10;
 	public static final int DEF_MAX_ITEM_LOAD = 20;
+	public static final int DEF_TRIMMED_TEXT_SIZE = 500;
 	
 	public static final String TABLE_RSS_ITEM = "RssItem";
 	public static final String RSS_ITEM_PROVIDER = "provider";
@@ -36,11 +40,12 @@ public class DatabaseQuery {
 	public static final String TABLE_RSS_PROVIDER = "RssProvider";
 	public static final String RSS_PROVIDER_NAME = "name";
 	public static final String RSS_PROVIDER_LINK = "link";
+	public static final String RSS_PROVIDER_ICON = "icon";
 	
-	private static final String[] RSS_SETTING_KEYS = {TABLE_ID, RSS_SETTING_TIME_INTERVAL, RSS_SETTING_MAX_ITEM_LOAD};
+	private static final String[] RSS_SETTING_KEYS = {TABLE_ID, RSS_SETTING_TIME_INTERVAL, RSS_SETTING_MAX_ITEM_LOAD, RSS_SETTING_TRIMMED_TEXT_SIZE};
 	private static final String[] RSS_ITEM_KEYS = {TABLE_ID, RSS_ITEM_PROVIDER, RSS_ITEM_TITLE, RSS_ITEM_DESCRIPTION, RSS_ITEM_LINK, RSS_ITEM_PUBDATE, RSS_ITEM_UPDATED};	
-	private static final String[] RSS_PROVIDER_KEYS = {TABLE_ID, RSS_PROVIDER_NAME, RSS_PROVIDER_LINK};
-	
+	private static final String[] RSS_PROVIDER_KEYS = {TABLE_ID, RSS_PROVIDER_NAME, RSS_PROVIDER_LINK, RSS_PROVIDER_ICON};
+
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
 	private Context mContext;
@@ -118,6 +123,8 @@ public class DatabaseQuery {
 			value.put(RSS_SETTING_TIME_INTERVAL, settings[0]);
 		if (settings[1] != 0)
 			value.put(RSS_SETTING_MAX_ITEM_LOAD, settings[1]);
+		if (settings[2] != 0)
+			value.put(RSS_SETTING_TRIMMED_TEXT_SIZE, settings[2]);
 		db.update(TABLE_RSS_SETTING, value, TABLE_ID + "=1", null);
 	}
 	
@@ -126,7 +133,7 @@ public class DatabaseQuery {
 		Cursor cursor = db.query(TABLE_RSS_SETTING, RSS_SETTING_KEYS, null, null, null, null, null);
 		cursor.moveToFirst();
 		if (!cursor.isAfterLast())
-			ret = new int[] {cursor.getInt(1), cursor.getInt(2)};
+			ret = new int[] {cursor.getInt(1), cursor.getInt(2), cursor.getInt(3)};
 		return ret;
 	}
 	
@@ -156,13 +163,14 @@ public class DatabaseQuery {
 		return hasNewItem;
 	}
 	
-	public long insertRssProvider(String provider, String link) {
+	public long insertRssProvider(String provider, String link, byte[] icon) {
 		if (existRssProvider(link))
 			return -1;
 		
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(RSS_PROVIDER_NAME, provider);
 		contentValues.put(RSS_PROVIDER_LINK, link);
+		contentValues.put(RSS_PROVIDER_ICON, icon);
 		return db.insert(TABLE_RSS_PROVIDER, null, contentValues);
 	}
 	
@@ -224,5 +232,16 @@ public class DatabaseQuery {
 			cursor.moveToNext();
 		}
         return providers;
+	}
+	
+	public Bitmap[] getRssProviderIcons() {
+		Cursor cursor = getRssProviders(null);
+		ArrayList<Bitmap> icons = new ArrayList<Bitmap>();
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			byte[] bitmapByte = cursor.getBlob(3);
+			icons.add(BitmapFactory.decodeByteArray(bitmapByte, 0, bitmapByte.length));
+		}
+		return icons.toArray(new Bitmap[icons.size()]);
 	}
 }

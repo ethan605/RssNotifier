@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:id="@+id/mnu_exit"
+      	android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:title="@string/mnu_exit_text" />
+  <item android:id="@+id/mnu_about"
+      	android:icon="@android:drawable/ic_menu_info_details"
+        android:title="@string/mnu_about_text" />
+</menu>

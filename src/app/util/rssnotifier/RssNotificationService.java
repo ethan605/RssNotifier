@@ -31,7 +31,6 @@ public class RssNotificationService extends Service implements Runnable {
 	private Context mContext;
 	private String mContent;
 	private PendingIntent mPendingIntent;
-	private ArrayList<String> updatedProvider;
 	
 	private DatabaseQuery dbQuery;
 	
@@ -77,18 +76,17 @@ public class RssNotificationService extends Service implements Runnable {
 	
 	@Override
 	public void run() {
-		new AsyncTask<Void, Void, Void>() {
+		new AsyncTask<Void, Void, ArrayList<String>>() {
 			@Override
-			protected Void doInBackground(Void... params) {
-				updatedProvider = updateRss();
-				return null;
+			protected ArrayList<String> doInBackground(Void... params) {
+				return updateRss();
 			}
 			
-			protected void onPostExecute(Void result) {
-				if (updatedProvider.size() > 0) {
+			protected void onPostExecute(ArrayList<String> result) {
+				if (result.size() > 0) {
 					mContent = "New RSS updated for: ";
-					for (int i = 0; i < updatedProvider.size(); i++)
-						mContent += updatedProvider.get(i) +  " ";
+					for (int i = 0; i < result.size(); i++)
+						mContent += result.get(i) +  " ";
 					updateNotification();
 				}
 

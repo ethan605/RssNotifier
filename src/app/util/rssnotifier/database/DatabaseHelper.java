@@ -15,7 +15,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		"create table " + DatabaseQuery.TABLE_RSS_SETTING + " (" +
 				DatabaseQuery.TABLE_ID + " integer primary key autoincrement, " +
 				DatabaseQuery.RSS_SETTING_TIME_INTERVAL + " integer not null, " + 
-				DatabaseQuery.RSS_SETTING_MAX_ITEM_LOAD + " integer not null);";
+				DatabaseQuery.RSS_SETTING_MAX_ITEM_LOAD + " integer not null, " +
+				DatabaseQuery.RSS_SETTING_TRIMMED_TEXT_SIZE + " interger not null);";
 
 	public static final String TABLE_RSS_ITEM_CREATE = 
 		"create table " + DatabaseQuery.TABLE_RSS_ITEM + " (" +
@@ -33,7 +34,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		"create table " + DatabaseQuery.TABLE_RSS_PROVIDER + " (" +
 		DatabaseQuery.TABLE_ID + " integer primary key autoincrement, " +
 		DatabaseQuery.RSS_PROVIDER_NAME + " text not null, " + 
-		DatabaseQuery.RSS_PROVIDER_LINK + " text unique not null);";
+		DatabaseQuery.RSS_PROVIDER_LINK + " text unique not null, " +
+		DatabaseQuery.RSS_PROVIDER_ICON + " blob);";
 	
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,6 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		ContentValues value = new ContentValues();
 		value.put(DatabaseQuery.RSS_SETTING_TIME_INTERVAL, DatabaseQuery.DEF_TIME_INTERVAL);
 		value.put(DatabaseQuery.RSS_SETTING_MAX_ITEM_LOAD, DatabaseQuery.DEF_MAX_ITEM_LOAD);
+		value.put(DatabaseQuery.RSS_SETTING_TRIMMED_TEXT_SIZE, DatabaseQuery.DEF_TRIMMED_TEXT_SIZE);
 		db.insert(DatabaseQuery.TABLE_RSS_SETTING, null, value);
 	}
 	
