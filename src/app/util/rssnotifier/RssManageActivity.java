@@ -1,13 +1,10 @@
 package app.util.rssnotifier;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.ArrayList;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,26 +13,31 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import app.util.rssnotifier.R;
+import app.util.rssnotifier.base.RssPreset;
+import app.util.rssnotifier.base.RssProvider;
 import app.util.rssnotifier.base.RssProviderList;
-import app.util.rssnotifier.base.XmlPullHandler;
+import app.util.rssnotifier.base.RssContentHandler;
 import app.util.rssnotifier.database.DatabaseQuery;
 
 public class RssManageActivity extends Activity implements OnClickListener {
 	final String TAG = "RssManageActivity";
+	
+	private static RssPreset rssPreset = null;
 	private ArrayList<String> providerList;
 	private ArrayAdapter<String> providerAdapter;
 	private ListView lstProviderList;
@@ -71,6 +73,9 @@ public class RssManageActivity extends Activity implements OnClickListener {
 		providerAdapter = new ArrayAdapter<String>(this,
 			android.R.layout.simple_list_item_1, providerList);
         lstProviderList.setAdapter(providerAdapter);
+        
+        if (rssPreset == null)
+        	parsePreset();
 	}
 	
 	@Override
@@ -92,12 +97,12 @@ public class RssManageActivity extends Activity implements OnClickListener {
 			else if (txtAddLabel.getText().toString().equals(getString(R.string.btn_select_all_text))) {
 				for (int i = 0; i < lstProviderList.getCount(); i++)
 					lstProviderList.setItemChecked(i, true);
-				btnAdd.setBackgroundResource(R.drawable.select_none);
+				btnAdd.setBackgroundResource(R.drawable.btn_select_none_background);
 				txtAddLabel.setText(R.string.btn_select_none_text);
 			} else if (txtAddLabel.getText().toString().equals(getString(R.string.btn_select_none_text))) {
 				for (int i = 0; i < lstProviderList.getCount(); i++)
 					lstProviderList.setItemChecked(i, false);
-				btnAdd.setBackgroundResource(R.drawable.select_all);
+				btnAdd.setBackgroundResource(R.drawable.btn_select_all_background);
 				txtAddLabel.setText(R.string.btn_select_all_text);
 			}
 			break;
@@ -136,20 +141,20 @@ public class RssManageActivity extends Activity implements OnClickListener {
 			if (txtSelectLabel.getText().toString().equals(getString(R.string.btn_select_text))) {
 				providerAdapter = new ArrayAdapter<String>(this,
 					android.R.layout.simple_list_item_multiple_choice, providerList);
-				btnAdd.setBackgroundResource(R.drawable.select_all);
+				btnAdd.setBackgroundResource(R.drawable.btn_select_all_background);
 				txtAddLabel.setText(R.string.btn_select_all_text);
-				btnSetting.setBackgroundResource(R.drawable.delete);
+				btnSetting.setBackgroundResource(R.drawable.btn_delete_background);
 				txtSettingLabel.setText(R.string.btn_delete_text);
-				btnSelect.setBackgroundResource(R.drawable.browse);
+				btnSelect.setBackgroundResource(R.drawable.btn_browse_background);
 				txtSelectLabel.setText(R.string.btn_browse_text);
 			} else {
 				providerAdapter = new ArrayAdapter<String>(this,
 					android.R.layout.simple_list_item_1, providerList);
-				btnAdd.setBackgroundResource(R.drawable.add);
+				btnAdd.setBackgroundResource(R.drawable.btn_add_background);
 				txtAddLabel.setText(R.string.btn_add_text);
-				btnSetting.setBackgroundResource(R.drawable.setting);
+				btnSetting.setBackgroundResource(R.drawable.btn_setting_background);
 				txtSettingLabel.setText(R.string.btn_setting_text);
-				btnSelect.setBackgroundResource(R.drawable.select);
+				btnSelect.setBackgroundResource(R.drawable.btn_select_background);
 				txtSelectLabel.setText(R.string.btn_select_text);
 			}
 			lstProviderList.setAdapter(providerAdapter);
@@ -166,7 +171,7 @@ public class RssManageActivity extends Activity implements OnClickListener {
 	}
 	
 	private class RssAddDialog extends Dialog implements View.OnClickListener {
-    	private EditText txtProviderName, txtProviderLink;
+    	private AutoCompleteTextView txtProviderName, txtProviderLink;
     	private Button btnOk, btnClear;
     	
     	private class RssValidate extends AsyncTask<String, Void, Boolean> {
@@ -194,31 +199,17 @@ public class RssManageActivity extends Activity implements OnClickListener {
         	}
     		@Override
     		protected Boolean doInBackground(String... urls) {
-    			return XmlPullHandler.feedValidate(link);
+    			return RssContentHandler.feedValidate(link);
     		}
     		@Override
     		protected void onPostExecute(Boolean result) {
     			progDialog.cancel();
     			if (!result)
     				Toast.makeText(RssManageActivity.this, R.string.rss_source_invalid, Toast.LENGTH_SHORT).show();
-    			else {
-    				byte[] icon = null;
-    				
-    				try {
-    					URL url = new URL("http://" + new URL(link).getHost() + "/favicon.ico");
-    					Bitmap bitmap = BitmapFactory.decodeStream(url.openStream());
-    					ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    					bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-    					icon = stream.toByteArray();
-    				} catch (IOException e) {
-    					e.printStackTrace();
-    				}
-    				
-    				if (dbQuery.insertRssProvider(name, link, icon) == -1)
-    					Toast.makeText(RssManageActivity.this, R.string.rss_provider_link_exists, Toast.LENGTH_SHORT).show();
-    				else
-    					process(name, link);
-    			}
+    			else if (dbQuery.insertRssProvider(name, link) == -1)
+					Toast.makeText(RssManageActivity.this, R.string.rss_provider_link_exists, Toast.LENGTH_SHORT).show();
+				else
+					process(name, link);
     		}
         }
     	
@@ -227,8 +218,34 @@ public class RssManageActivity extends Activity implements OnClickListener {
 			setContentView(R.layout.rss_add);
 			setTitle(R.string.rss_add_provider);
 			
-			txtProviderName = (EditText) this.findViewById(R.id.txt_provider_name);
-			txtProviderLink = (EditText) this.findViewById(R.id.txt_provider_link);
+			final RssProviderList providers = new RssProviderList(rssPreset.getProvider());
+			String[] nameList = providers.getProviderNames();
+			ArrayAdapter<String> providerAdapter = new ArrayAdapter<String>(RssManageActivity.this, R.layout.list_item, nameList);
+
+			txtProviderName = (AutoCompleteTextView) this.findViewById(R.id.txt_provider_name);
+			txtProviderName.setAdapter(providerAdapter);
+			
+			txtProviderLink = (AutoCompleteTextView) this.findViewById(R.id.txt_provider_link);
+			txtProviderName.addTextChangedListener(new TextWatcher() {
+				@Override
+				public void onTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
+					String[] linkList = providers.getProviderLinks(s.toString());
+					if (linkList != null) {
+						ArrayAdapter<String> providerAdapter = new ArrayAdapter<String>(RssManageActivity.this, R.layout.list_item, linkList);
+						txtProviderLink.setAdapter(providerAdapter);
+						txtProviderLink.setText(linkList[0]);
+					}
+				}
+				
+				@Override
+				public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				}
+				
+				@Override
+				public void afterTextChanged(Editable arg0) {
+				}
+			});
+			
 			btnOk = (Button) this.findViewById(R.id.btn_ok);
 			btnClear = (Button) this.findViewById(R.id.btn_clear);
 			
@@ -242,23 +259,6 @@ public class RssManageActivity extends Activity implements OnClickListener {
 			case R.id.btn_ok:
 				String name = txtProviderName.getText().toString(),
 						link = txtProviderLink.getText().toString();
-				
-				if (name.equals("vne"))
-					link = "http://vnexpress.net/rss/gl/trang-chu.rss";
-				else if (name.equals("vnn"))
-					link = "http://vietnamnet.vn/rss/moi-nong.rss";
-				else if (name.equals("dan"))
-					link = "http://dantri.com.vn/trangchu.rss";
-				else if (name.equals("cnn"))
-					link = "http://rss.cnn.com/rss/edition.rss";
-				else if (name.equals("bbc"))
-					link = "http://feeds.bbci.co.uk/news/rss.xml";
-				else if (name.equals("gen"))
-					link = "http://genk.vn/trang-chu.rss";
-				else if (name.equals("fsl"))
-					link = "http://fslink.us/?feed=rss2";
-				else if (name.equals("hdv"))
-					link = "http://hdvnbits.org/torrentrss.php?rows=10&cat=23,24,124,128";
 				
 				if (!name.equals("") && !link.equals(""))
 					new RssValidate(name, link).execute();
@@ -281,4 +281,15 @@ public class RssManageActivity extends Activity implements OnClickListener {
 			finish();
 		}
     }
+	
+	private void parsePreset() {
+		try {
+			Serializer serializer = new Persister();
+			InputStream inputStream = getAssets().open("preset.xml");
+			rssPreset = new RssPreset();
+			rssPreset = serializer.read(RssPreset.class, inputStream);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -5,7 +5,7 @@ public class RssItem {
 	private String title;
 	private String description;
 	private String link;
-	private String pubdate;
+	private long pubdate;
 	private int updated;
 	
 	public RssItem() {
@@ -13,10 +13,10 @@ public class RssItem {
 		title = "";
 		description = "";
 		link = "";
-		pubdate = "";
+		pubdate = System.currentTimeMillis();
 	}
 	
-	public RssItem(String _provider, String _title, String _description, String _link, String _pubdate, int _updated) {
+	public RssItem(String _provider, String _title, String _description, String _link, long _pubdate, int _updated) {
 		setProvider(_provider);
 		setTitle(_title);
 		setDescription(_description);
@@ -41,7 +41,7 @@ public class RssItem {
 		link = _link;
 	}
 	
-	public void setPubDate(String _pubdate) {
+	public void setPubDate(long _pubdate) {
 		pubdate = _pubdate;
 	}
 	
@@ -65,7 +65,7 @@ public class RssItem {
 		return link;
 	}
 	
-	public String getPubDate() {
+	public long getPubDate() {
 		return pubdate;
 	}
 	

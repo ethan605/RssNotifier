@@ -147,7 +147,7 @@ public class RssSettingActivity extends Activity implements OnClickListener {
 							txtMaxItemLoadValue.setText(inputNumber + " " + getString(R.string.items));
 							dbQuery.updateRssSettings(new int[] {0, inputNumber, 0});
 						} else {
-							Toast.makeText(RssSettingActivity.this, R.string.restart_to_change, Toast.LENGTH_SHORT).show();
+							Toast.makeText(RssSettingActivity.this, R.string.reload_to_apply, Toast.LENGTH_SHORT).show();
 							txtTrimmedTextSizeValue.setText(inputNumber + " " + getString(R.string.characters));
 							dbQuery.updateRssSettings(new int[] {0, 0, inputNumber});
 						}

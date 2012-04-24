@@ -1,6 +1,8 @@
 package app.util.rssnotifier.database;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -40,11 +42,10 @@ public class DatabaseQuery {
 	public static final String TABLE_RSS_PROVIDER = "RssProvider";
 	public static final String RSS_PROVIDER_NAME = "name";
 	public static final String RSS_PROVIDER_LINK = "link";
-	public static final String RSS_PROVIDER_ICON = "icon";
 	
 	private static final String[] RSS_SETTING_KEYS = {TABLE_ID, RSS_SETTING_TIME_INTERVAL, RSS_SETTING_MAX_ITEM_LOAD, RSS_SETTING_TRIMMED_TEXT_SIZE};
 	private static final String[] RSS_ITEM_KEYS = {TABLE_ID, RSS_ITEM_PROVIDER, RSS_ITEM_TITLE, RSS_ITEM_DESCRIPTION, RSS_ITEM_LINK, RSS_ITEM_PUBDATE, RSS_ITEM_UPDATED};	
-	private static final String[] RSS_PROVIDER_KEYS = {TABLE_ID, RSS_PROVIDER_NAME, RSS_PROVIDER_LINK, RSS_PROVIDER_ICON};
+	private static final String[] RSS_PROVIDER_KEYS = {TABLE_ID, RSS_PROVIDER_NAME, RSS_PROVIDER_LINK};
 
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
@@ -102,7 +103,7 @@ public class DatabaseQuery {
 			criteria = RSS_ITEM_PROVIDER + "=" + textWrap(provider);
 		if (limit > 0)
 			strLimit = "0," + String.valueOf(limit);
-		return db.query(TABLE_RSS_ITEM, RSS_ITEM_KEYS, criteria, null, null, null, RSS_ITEM_PUBDATE + " DESC", strLimit);
+		return db.query(TABLE_RSS_ITEM, RSS_ITEM_KEYS, criteria, null, null, null, RSS_ITEM_UPDATED + " DESC, " + RSS_ITEM_PUBDATE + " DESC", strLimit);
 	}
 	
 	private Cursor getUpdatedRssItems() {
@@ -147,7 +148,7 @@ public class DatabaseQuery {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			ret.add(new RssItem(cursor.getString(1), cursor.getString(2), cursor.getString(3),
-					cursor.getString(4), cursor.getString(5), cursor.getInt(6)));
+					cursor.getString(4), cursor.getLong(5), cursor.getInt(6)));
 			cursor.moveToNext();
 		}
 		
@@ -163,14 +164,13 @@ public class DatabaseQuery {
 		return hasNewItem;
 	}
 	
-	public long insertRssProvider(String provider, String link, byte[] icon) {
+	public long insertRssProvider(String provider, String link) {
 		if (existRssProvider(link))
 			return -1;
 		
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(RSS_PROVIDER_NAME, provider);
 		contentValues.put(RSS_PROVIDER_LINK, link);
-		contentValues.put(RSS_PROVIDER_ICON, icon);
 		return db.insert(TABLE_RSS_PROVIDER, null, contentValues);
 	}
 	
@@ -197,7 +197,7 @@ public class DatabaseQuery {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			feed.addItem(new RssItem(cursor.getString(1), cursor.getString(2), cursor.getString(3),
-					cursor.getString(4), cursor.getString(5), cursor.getInt(6)));
+					cursor.getString(4), cursor.getLong(5), cursor.getInt(6)));
 			cursor.moveToNext();
 		}
 		
@@ -210,7 +210,7 @@ public class DatabaseQuery {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			feed.addItem(new RssItem(cursor.getString(1), cursor.getString(2), cursor.getString(3),
-						cursor.getString(4), cursor.getString(5), cursor.getInt(6)));
+						cursor.getString(4), cursor.getLong(5), cursor.getInt(6)));
 			cursor.moveToNext();
 		}
 		
@@ -232,16 +232,5 @@ public class DatabaseQuery {
 			cursor.moveToNext();
 		}
         return providers;
-	}
-	
-	public Bitmap[] getRssProviderIcons() {
-		Cursor cursor = getRssProviders(null);
-		ArrayList<Bitmap> icons = new ArrayList<Bitmap>();
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			byte[] bitmapByte = cursor.getBlob(3);
-			icons.add(BitmapFactory.decodeByteArray(bitmapByte, 0, bitmapByte.length));
-		}
-		return icons.toArray(new Bitmap[icons.size()]);
 	}
 }

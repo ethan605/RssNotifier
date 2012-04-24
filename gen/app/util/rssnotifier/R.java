@@ -12,21 +12,45 @@ public final class R {
     }
     public static final class drawable {
         public static final int add=0x7f020000;
-        public static final int bg=0x7f020001;
-        public static final int browse=0x7f020002;
-        public static final int delete=0x7f020003;
-        public static final int done=0x7f020004;
-        public static final int ic_launcher=0x7f020005;
-        public static final int manage=0x7f020006;
-        public static final int new_item=0x7f020007;
-        public static final int refresh=0x7f020008;
-        public static final int refresh_2=0x7f020009;
-        public static final int search=0x7f02000a;
-        public static final int select=0x7f02000b;
-        public static final int select_all=0x7f02000c;
-        public static final int select_none=0x7f02000d;
-        public static final int setting=0x7f02000e;
-        public static final int toolbar=0x7f02000f;
+        public static final int add_pressed=0x7f020001;
+        public static final int bg=0x7f020002;
+        public static final int browse=0x7f020003;
+        public static final int browse_pressed=0x7f020004;
+        public static final int btn_add_background=0x7f020005;
+        public static final int btn_browse_background=0x7f020006;
+        public static final int btn_delete_background=0x7f020007;
+        public static final int btn_done_background=0x7f020008;
+        public static final int btn_label_background=0x7f020009;
+        public static final int btn_manage_background=0x7f02000a;
+        public static final int btn_refresh_background=0x7f02000b;
+        public static final int btn_search_background=0x7f02000c;
+        public static final int btn_select_all_background=0x7f02000d;
+        public static final int btn_select_background=0x7f02000e;
+        public static final int btn_select_none_background=0x7f02000f;
+        public static final int btn_setting_background=0x7f020010;
+        public static final int delete=0x7f020011;
+        public static final int delete_pressed=0x7f020012;
+        public static final int done=0x7f020013;
+        public static final int done_pressed=0x7f020014;
+        public static final int ic_launcher=0x7f020015;
+        public static final int manage=0x7f020016;
+        public static final int manage_pressed=0x7f020017;
+        public static final int new_item=0x7f020018;
+        public static final int new_item_2=0x7f020019;
+        public static final int refresh=0x7f02001a;
+        public static final int refresh_pressed=0x7f02001b;
+        public static final int search=0x7f02001c;
+        public static final int search_pressed=0x7f02001d;
+        public static final int select=0x7f02001e;
+        public static final int select_all=0x7f02001f;
+        public static final int select_all_pressed=0x7f020020;
+        public static final int select_none=0x7f020021;
+        public static final int select_none_pressed=0x7f020022;
+        public static final int select_pressed=0x7f020023;
+        public static final int setting=0x7f020024;
+        public static final int setting_pressed=0x7f020025;
+        public static final int toolbar=0x7f020026;
+        public static final int txt_background=0x7f020027;
     }
     public static final class id {
         public static final int btn_add=0x7f06000e;
@@ -49,8 +73,8 @@ public final class R {
         public static final int max_item_load_setting=0x7f060028;
         public static final int mnu_about=0x7f060031;
         public static final int mnu_exit=0x7f060030;
+        public static final int rss_ctem_list=0x7f060008;
         public static final int rss_item_content=0x7f060007;
-        public static final int rss_item_list=0x7f060008;
         public static final int rss_item_title=0x7f060006;
         public static final int service_setting=0x7f060020;
         public static final int time_interval_setting=0x7f060024;
@@ -82,13 +106,14 @@ public final class R {
     }
     public static final class layout {
         public static final int input_number_dialog=0x7f030000;
-        public static final int rss_add=0x7f030001;
-        public static final int rss_item_detail=0x7f030002;
-        public static final int rss_item_list=0x7f030003;
-        public static final int rss_manage=0x7f030004;
-        public static final int rss_provider_setting=0x7f030005;
-        public static final int rss_reader=0x7f030006;
-        public static final int rss_setting=0x7f030007;
+        public static final int list_item=0x7f030001;
+        public static final int rss_add=0x7f030002;
+        public static final int rss_item_detail=0x7f030003;
+        public static final int rss_item_list=0x7f030004;
+        public static final int rss_manage=0x7f030005;
+        public static final int rss_provider_setting=0x7f030006;
+        public static final int rss_reader=0x7f030007;
+        public static final int rss_setting=0x7f030008;
     }
     public static final class menu {
         public static final int menu=0x7f050000;
@@ -115,14 +140,14 @@ public final class R {
         public static final int btn_select_none_text=0x7f04001b;
         public static final int btn_select_text=0x7f040017;
         public static final int btn_setting_text=0x7f040022;
-        public static final int characters=0x7f040038;
+        public static final int characters=0x7f040039;
         public static final int input_number_dialog_title=0x7f04002d;
         public static final int invalid_input_number=0x7f04002c;
         public static final int items=0x7f04002a;
         public static final int minutes=0x7f040026;
         public static final int mnu_about_text=0x7f04003b;
         public static final int mnu_exit_text=0x7f04003a;
-        public static final int restart_to_change=0x7f040039;
+        public static final int reload_to_apply=0x7f040038;
         public static final int rss_add_blank_error=0x7f04000e;
         public static final int rss_add_provider=0x7f040011;
         public static final int rss_choose_provider=0x7f040010;

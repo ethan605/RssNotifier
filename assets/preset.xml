@@ -1,0 +1,60 @@
+<preset>
+   <provider name="24H">
+      <string>http://www.24h.com.vn/upload/rss/tintuctrongngay.rss</string>
+      <string>http://www.24h.com.vn/upload/rss/bongda.rss</string>
+   </provider>
+   <provider name="BBC">
+      <string>http://feeds.bbci.co.uk/news/rss.xml</string>
+   </provider>
+   <provider name="CNN">
+      <string>http://rss.cnn.com/rss/edition.rss</string>
+   </provider>
+   <provider name="Dan Tri">
+      <string>http://dantri.com.vn/trangchu.rss</string>
+   </provider>
+   <provider name="fsLink">
+      <string>http://fslink.us/?feed=rss2</string>
+   </provider>
+   <provider name="GenK">
+      <string>http://genk.vn/trang-chu.rss</string>
+   </provider>
+   <provider name="Ha Noi Moi">
+      <string>http://hanoimoi.com.vn/rssparent/163/Xa-hoi.rss</string>
+   </provider>
+   <provider name="Hacker News">
+      <string>http://news.ycombinator.com/rss</string>
+   </provider>
+   <provider name="HdVnBits">
+      <string>http://hdvnbits.org/torrentrss.php?rows=10&amp;cat=23,24,124,128</string>
+   </provider>
+   <provider name="Lao Dong">
+      <string>http://laodong.com.vn/RSS/Feed.aspx</string>
+   </provider>
+   <provider name="Nguoi Lao Dong">
+      <string>http://nld.com.vn/rss/tin-moi-nhat</string>
+   </provider>
+   <provider name="Nhan Dan">
+      <string>http://www.nhandan.org.vn/cmlink/th-i-s-1.287327?localLinksEnabled=false</string>
+   </provider>
+   <provider name="Thanh Nien">
+      <string>http://www.thanhnien.com.vn/_layouts/newsrss.aspx</string>
+   </provider>
+   <provider name="Tin Tuc Online">
+      <string>http://www.tintuconline.com.vn/rss/home.rss</string>
+   </provider>
+   <provider name="Tinh Te">
+      <string>http://feeds.feedburner.com/tinhte?format=xml</string>
+   </provider>
+   <provider name="Tuoi Tre">
+      <string>http://tuoitre.vn/RssFeeds.aspx?ChannelID=334</string>
+   </provider>
+   <provider name="vnExpress">
+      <string>http://vnexpress.net/rss/gl/trang-chu.rss</string>
+   </provider>
+   <provider name="VietNamNet">
+      <string>http://vietnamnet.vn/rss/home.rss</string>
+      <string>http://vietnamnet.vn/rss/doc-nhieu-nhat.rss</string>
+      <string>http://vietnamnet.vn/rss/moi-nong.rss</string>
+      <string>http://vietnamnet.vn/rss/xa-hoi.rss</string>
+   </provider>
+</preset>

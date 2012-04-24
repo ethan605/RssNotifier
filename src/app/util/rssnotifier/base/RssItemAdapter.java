@@ -3,8 +3,11 @@ package app.util.rssnotifier.base;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import android.app.ListActivity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.*;
 import android.widget.*;
 import app.util.rssnotifier.R;
@@ -14,15 +17,12 @@ public class RssItemAdapter extends ArrayAdapter<RssItem> {
 	private Context context;
 	private List<RssItem> rssList;
 	private int trimmedTextSize;
+	Map<String, Bitmap> iconList;
 	
 	public RssItemAdapter(Context _context, int textViewResourceId, ArrayList<RssItem> objects) {
 		super(_context, textViewResourceId, objects);
 		context = _context;
 		rssList = objects;
-		DatabaseQuery dbQuery = new DatabaseQuery(context);
-		dbQuery.openDB();
-		trimmedTextSize = dbQuery.getRssSettings()[2];
-		dbQuery.closeDB();
 	}
 	
 	@Override
@@ -49,7 +49,7 @@ public class RssItemAdapter extends ArrayAdapter<RssItem> {
 		}
 		description.setText(desc);
 		provider.setText(item.getProvider());
-		Date date = new Date(Long.parseLong(item.getPubDate()));
+		Date date = new Date(item.getPubDate());
 		pubDate.setText(date.toLocaleString());
 		
 		if (item.getUpdated() == 1)
@@ -58,5 +58,13 @@ public class RssItemAdapter extends ArrayAdapter<RssItem> {
 			itemNew.setVisibility(View.GONE);
 		
 		return row;
+	}
+	
+	public RssItemAdapter config() {
+		DatabaseQuery dbQuery = new DatabaseQuery(context);
+		dbQuery.openDB();
+		trimmedTextSize = dbQuery.getRssSettings()[2];
+		dbQuery.closeDB();
+		return this;
 	}
 }

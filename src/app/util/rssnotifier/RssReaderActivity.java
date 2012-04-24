@@ -23,7 +23,7 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 	protected static final int RES_RSS_DELETE = RESULT_FIRST_USER + 3;
 	protected static final int REQ_STOP_SERVICE = RESULT_FIRST_USER + 4;
 	
-	protected boolean isTaskRunning = false;
+	private static boolean isTaskRunning = false;
 	private RssFeed rssFeed = null;
 	private RssProviderList rssProvider = null;
 	private ArrayList<RssItem> rssList = null;
@@ -65,7 +65,6 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 		if (hasUpdate) {
 			rssFeed = dbQuery.getUpdatedRssFeed();
 			updateListView();
-			dbQuery.updateRssItems();
 		} else
 			loadData(null, true, false, true);
 	}
@@ -74,6 +73,18 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 	public void onDestroy() {
 		dbQuery.closeDB();
 		super.onDestroy();
+	}
+	
+	@Override
+	public void onNewIntent(Intent intent) {
+		try {
+			if (intent.getExtras().getBoolean("rss_update")) {
+				rssFeed = dbQuery.getUpdatedRssFeed();
+				updateListView();
+			}
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -95,9 +106,19 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 		txtSearch.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				rssList.clear();
-				rssList.addAll(dbQuery.searchRssItem(s.toString()));
-				rssAdapter.notifyDataSetChanged();
+				new AsyncTask<String, Void, ArrayList<RssItem>>() {
+					@Override
+					protected ArrayList<RssItem> doInBackground(String... params) {
+						return dbQuery.searchRssItem(params[0]);
+					}
+					
+					@Override
+					protected void onPostExecute(ArrayList<RssItem> result) {
+						rssList.clear();
+						rssList.addAll(result);
+						rssAdapter.config().notifyDataSetChanged();						
+					}
+				}.execute(s.toString());
 			}
 			
 			@Override
@@ -163,7 +184,7 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 				txtBrowseLabel.setVisibility(View.GONE);
 				btnRefresh.setVisibility(View.GONE);
 				txtRefreshLabel.setVisibility(View.GONE);
-				btnSearch.setBackgroundResource(R.drawable.done);
+				btnSearch.setBackgroundResource(R.drawable.btn_done_background);
 				txtSearchLabel.setText(R.string.btn_done_text);
 				txtSearch.setVisibility(View.VISIBLE);
 				txtSearch.requestFocus();
@@ -174,7 +195,7 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 				txtBrowseLabel.setVisibility(View.VISIBLE);
 				btnRefresh.setVisibility(View.VISIBLE);
 				txtRefreshLabel.setVisibility(View.VISIBLE);
-				btnSearch.setBackgroundResource(R.drawable.search);
+				btnSearch.setBackgroundResource(R.drawable.btn_search_background);
 				txtSearchLabel.setText(R.string.btn_search_text);
 				txtSearch.setVisibility(View.GONE);
 				txtSearch.setText("");
@@ -330,7 +351,7 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 	}
 	
 	private boolean fetchRss(String _provider, String _url) {
-		RssFeed _feed = new XmlPullHandler(_provider, _url).getFeed();
+		RssFeed _feed = new RssContentHandler(_provider, _url).getFeed();
 		if (_feed != null)
 	    	return dbQuery.insertRssFeed(_feed);
 		
@@ -349,7 +370,8 @@ public class RssReaderActivity extends ListActivity implements View.OnClickListe
 		rssList.clear();
 		if (rssFeed != null)
 			rssList.addAll(rssFeed.getList());
-		rssAdapter.notifyDataSetChanged();
+		rssAdapter.config().notifyDataSetChanged();
+		dbQuery.updateRssItems();
 		this.getListView().setSelection(0);
 	}
 }

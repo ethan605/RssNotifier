@@ -17,7 +17,7 @@
             android:layout_marginLeft="40dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/add" />
+            android:background="@drawable/btn_add_background" />
 
         <TextView
             android:id="@+id/txt_add_label"
@@ -34,8 +34,7 @@
             android:layout_height="40dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/setting" />
-
+            android:background="@drawable/btn_setting_background" />
         <TextView
             android:id="@+id/txt_setting_label"
             android:layout_width="50dp"
@@ -52,8 +51,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="40dp"
-            android:background="@drawable/select" />
-
+            android:background="@drawable/btn_select_background" />
         <TextView
             android:id="@+id/txt_select_label"
             android:layout_width="50dp"
@@ -69,6 +67,7 @@
     <ListView
 		android:id="@+id/lst_rss_provider"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" />
+		android:layout_height="wrap_content"
+		android:cacheColorHint="#0000" />
 
 </LinearLayout>

@@ -56,8 +56,8 @@
     <string name="txt_time_interval_description">Amount of time for notification service to regularly check for new RSS update</string>
     <string name="txt_trimmed_text_size_title">Trimmed Text Size</string>
     <string name="txt_trimmed_text_size_description">Amount of maximum characters shown in RSS item description</string>
-    <string name="characters">characters</string>
-    <string name="restart_to_change">This setting requires application restarting to apply changes</string>
+    <string name="reload_to_apply">RSS items should be reloaded to apply changes</string><string name="characters">characters</string>
+    
     
     <string name="mnu_exit_text">Exit</string>
 	<string name="mnu_about_text">About</string>

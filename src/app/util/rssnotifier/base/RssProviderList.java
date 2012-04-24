@@ -11,6 +11,13 @@ public class RssProviderList {
 		providerList = new ArrayList<RssProvider>();
 	}
 	
+	public RssProviderList(ArrayList<RssProvider> providers) {
+		nameList = new ArrayList<String>();
+		providerList = providers;
+		for (int i = 0; i < providers.size(); i++)
+			nameList.add(providers.get(i).getName());
+	}
+	
 	public void addProvider(String name, String link) {
 		int nameIndex = nameList.indexOf(name);
 		if (nameIndex != -1)
@@ -26,6 +33,9 @@ public class RssProviderList {
 	}
 	
 	public String[] getProviderLinks(String name) {
+		int index = nameList.indexOf(name);
+		if (index == -1)
+			return null;
 		return providerList.get(nameList.indexOf(name)).getLink();
 	}
 	

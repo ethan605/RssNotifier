@@ -16,7 +16,7 @@ import android.os.IBinder;
 import android.util.Log;
 import app.util.rssnotifier.base.RssFeed;
 import app.util.rssnotifier.base.RssProviderList;
-import app.util.rssnotifier.base.XmlPullHandler;
+import app.util.rssnotifier.base.RssContentHandler;
 import app.util.rssnotifier.database.DatabaseQuery;
 
 public class RssNotificationService extends Service implements Runnable {
@@ -42,10 +42,6 @@ public class RssNotificationService extends Service implements Runnable {
 		registerReceiver(notifyServiceReceiver, intentFilter);		
 		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mContext = getApplicationContext();
-		Intent _intent = new Intent(RssNotificationService.this, RssReaderActivity.class);
-		_intent.putExtra("rss_update", true);
-		mPendingIntent = PendingIntent.getActivity(getApplicationContext(),
-				0, _intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		handler = new Handler();
 		
@@ -120,7 +116,7 @@ public class RssNotificationService extends Service implements Runnable {
 	}
 	
 	private boolean fetchRss(String _provider, String _url) {
-		RssFeed _feed = new XmlPullHandler(_provider, _url).getFeed();
+		RssFeed _feed = new RssContentHandler(_provider, _url).getFeed();
 		if (_feed != null)
 	    	return dbQuery.insertRssFeed(_feed);
 		
@@ -128,12 +124,16 @@ public class RssNotificationService extends Service implements Runnable {
 	}
 	
 	private void updateNotification() {
+		Intent intent = new Intent(RssNotificationService.this, RssReaderActivity.class);
+		intent.putExtra("rss_update", true);
+		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
+				0, intent, Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
 		Notification notification = new Notification(R.drawable.ic_launcher,
 			getString(R.string.rss_update_notification),
 			System.currentTimeMillis());
 		notification.defaults |= Notification.DEFAULT_SOUND;
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		notification.setLatestEventInfo(mContext, getString(R.string.rss_update_notification), mContent, mPendingIntent);
+		notification.setLatestEventInfo(mContext, getString(R.string.rss_update_notification), mContent, pendingIntent);
 		notificationManager.notify(RSS_NOTIFICATION_ID, notification);
 	}
 }
